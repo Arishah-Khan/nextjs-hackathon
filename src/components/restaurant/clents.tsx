@@ -15,7 +15,7 @@ const testimonials = [
     id: 2,
     name: "Sarah Parker",
     role: "Chef",
-    image: "/images/client1.png",
+    image: "/images/client2.png",
     feedback:
       "Urna, elit augue urna, vitae feugiat pretium donec id elementum. Ultrices mattis sed vitae mus risus.",
   },
@@ -23,7 +23,7 @@ const testimonials = [
     id: 3,
     name: "John Doe",
     role: "Restaurant Owner",
-    image: "/images/client1.png",
+    image: "/images/client3.png",
     feedback:
       "Lacus nisi, et ac dapibus sit eu velit in consequat. Quisque diam pellentesque bibendum non dui volutpat fringilla.",
   },
@@ -31,7 +31,7 @@ const testimonials = [
     id: 4,
     name: "Emily Stone",
     role: "Food Blogger",
-    image: "/images/client1.png",
+    image: "/images/client4.png",
     feedback:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ultrices mattis sed vitae mus risus.",
   },
@@ -39,7 +39,7 @@ const testimonials = [
     id: 5,
     name: "Michael Lee",
     role: "Nutritionist",
-    image: "/images/client1.png",
+    image: "/images/client5.png",
     feedback:
       "Urna, elit augue urna, vitae feugiat pretium donec id elementum. Lacus nisi, et ac dapibus sit eu velit in consequat.",
   },
@@ -71,13 +71,13 @@ export default function Client() {
   {/* Active Testimonial */}
   <div className="relative bg-white p-6 sm:p-8 rounded-lg shadow-lg w-full max-w-lg">
     {/* Client Image */}
-    <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-[#FF9F0D]">
+    <div className="absolute -top-12 left-1/2 transform -translate-x-1/2  sm:w-28 sm:h-28 rounded-full overflow-hidden bg-black border-4 border-[#FF9F0D]">
       <Image
         src={testimonials[activeIndex].image}
         alt={testimonials[activeIndex].name}
         width="20"
         height="20"
-        className="object-cover w-full h-full object-top"
+        className="  w-[100px] h-auto object-contain"
       />
     </div>
 
@@ -101,7 +101,7 @@ export default function Client() {
         alt="star"
         width={100}
         height={20}
-        className="sm:w-28 sm:h-6"
+        className="sm:w-[140px] sm:h-6"
       />
 
       {/* Client Name */}

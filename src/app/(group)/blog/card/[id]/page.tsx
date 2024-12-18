@@ -29,7 +29,7 @@ const BlogDetail = async ({ params }: any) => {
     <section className="pb-10 max-w-[1340px] mx-auto" >
 
 <div className="bg-[#0d0d0d]">
-             <HeroSection pageTitle="Blog Details" /></div>
+             <HeroSection pageTitle="Blog Details" page='Blog Details'/></div>
       <div className="p-4 rounded-lg shadow-lg max-w-[700px] mx-auto mt-4">
         {/* Displaying the image with a smaller size */}
         <Image

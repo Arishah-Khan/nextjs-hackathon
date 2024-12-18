@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "../globals.css";
-import Main from "@/components/menu/main";
 import Footer from "@/components/menu/footer";
 import Header from "@/components/menu/header";
 
@@ -16,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
- <div>
+ <div className="max-w-[1340px] mx-auto">
   <Header />
 {children}
 <Footer />

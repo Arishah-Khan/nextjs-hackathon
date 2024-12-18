@@ -78,7 +78,7 @@ function ShoppingCart() {
   return (
     <main className="max-w-full mx-auto">
     <div className="bg-[#0d0d0d]">
-      <HeroSection pageTitle="Our Shop" />
+      <HeroSection pageTitle="Shopping Cart" page="Shopping Cart" />
     </div>
   
     <div className="container mx-auto  px-2 md:px-4 py-6">

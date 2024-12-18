@@ -33,7 +33,8 @@ const cardsData = [
       mainImage="/images/starter4.png"
       pageTitle="Drinks"
       cards={cardsData}
-      order={1}
+      order={2}
+      direction="justify-end"
     />
     
     );

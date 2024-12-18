@@ -4,7 +4,7 @@ export default function Main(){
     return(
         <main>
             <div className="bg-[#0d0d0d]">
-            <HeroSection pageTitle="Our Menu"/></div>
+            <HeroSection pageTitle="Our Menu" page="Menu"/></div>
         </main>
     )
 }

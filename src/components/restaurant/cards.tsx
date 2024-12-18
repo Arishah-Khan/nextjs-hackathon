@@ -41,11 +41,11 @@ interface Card {
         <div className="absolute inset-0 bg-black opacity-80 z-0"></div>
   
         {/* Cards Content */}
-        <div className="relative grid grid-cols-2 md:grid-cols-4 items-center justify-center gap-6 px-2 md:px-4 py-2 md:py-8  z-10">
+        <div className="relative grid grid-cols-2 md:grid-cols-4 items-center justify-center gap-2 sm:gap-6 px-2 md:px-4 py-2 md:py-8  z-10">
           {cards.map((card, index) => (
             <div
               key={index}
-              className="flex flex-col items-center justify-center flex-wrap text-center space-y-2 md:space-y-4 bg-opacity-90 rounded-md p-4 shadow-lg"
+              className="flex flex-col items-center justify-between flex-wrap text-center space-y-1 sm:space-y-2 md:space-y-4 bg-opacity-90 rounded-md p-1 sm:p-4 shadow-lg"
             >
               {/* Image */}
               <Image
@@ -53,12 +53,12 @@ interface Card {
                 alt={card.heading}
                 width={40}
                 height={40}
-                className="w-16 h-16 object-contain"
+                className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
               />
               {/* Heading */}
-              <h3 className="text-lg font-semibold text-white">{card.heading}</h3>
+              <h3 className="text-sm sm:text-lg font-semibold text-white">{card.heading}</h3>
               {/* Numbers */}
-              <p className="text-white text-2xl font-bold">{card.numbers}</p>
+              <p className="text-white text-lg sm:text-2xl font-bold">{card.numbers}</p>
             </div>
           ))}
         </div>

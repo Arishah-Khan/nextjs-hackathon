@@ -140,7 +140,7 @@ export default function ShopDetail({ params }: DetailProps) {
   return (
     <main className="max-w-[1340px] mx-auto px-4 py-10">
       {/* Product Section */}
-      <HeroSection pageTitle="Shop Details" />
+      <HeroSection pageTitle="Shop Details" page="Shop Details" />
 
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Left Side: Images */}

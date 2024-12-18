@@ -62,7 +62,7 @@ const ContactPage = () => {
       <section className="text-center mb-16">
         <h2 className="text-2xl font-semibold text-[#ff9f0d] mb-4">Our Location</h2>
         <p className="text-lg text-gray-600">
-          Our shop is located on XYZ Road, Lahore. You can easily visit us.
+          Our shop is located on XYZ Road, Karachi. You can easily visit us.
         </p>
       </section>
 

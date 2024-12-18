@@ -12,6 +12,7 @@ const cardsData = [
       description: "Gorgonzola, ricotta, mozzarella, taleggio",
       calories: "700 CAL",
       price: "43$",
+      optionalColor: "#ff9f0d"
     },
     {
       cardHeading: "Tormentoso Bush Pizza Pintoage",
@@ -33,7 +34,8 @@ const cardsData = [
       mainImage="/images/starter1.png"
       pageTitle="Starter Menu"
       cards={cardsData}
-      order={2}
+      order={1}
+      direction="justify-start"
     />
     
     );

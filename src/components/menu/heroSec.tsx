@@ -1,8 +1,11 @@
+import Link from "next/link";
+
 interface Title {
     pageTitle: string;
+    page:string
   }
   
-  const HeroSection = ({ pageTitle }: Title) => {
+  const HeroSection = ({ pageTitle,page }: Title) => {
     return (
       <section
         className="relative w-full h-[250px] md:h-[350px] bg-cover bg-center max-w-[1340px] mx-auto"
@@ -16,7 +19,7 @@ interface Title {
             {pageTitle}
           </h2>
           <h5 className="text-lg sm:text-xl lg:text-xl text-white font-thin" style={{ fontFamily: 'Helvetica, sans-serif' }}>
-            Home &gt; <span className="text-[#FF9F0D]">{pageTitle}</span>
+           <Link href="/" className="pr-2"> Home </Link>  &gt; <span className="text-[#FF9F0D] pl-2">{page}</span>
           </h5>
         </div>
       </section>
