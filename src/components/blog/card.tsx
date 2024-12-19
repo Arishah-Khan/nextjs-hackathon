@@ -52,26 +52,27 @@ const blogCards: BlogCard[] = [
 
 const BlogPage = () => {
   return (
-    <section className="py-10 px-5 grid grid-cols-1  justify-center items-center gap-6">
+    <section className=" py-10 px-5 flex flex-col flex-1 justify-center items-center gap-6">
       {blogCards.map((card) => (
-        <div key={card.id} className="p-4 rounded-lg cursor-pointer hover:shadow-lg max-w-[500px] mx-auto">
+        <div key={card.id} className="p-4  cursor-pointer max-w-[600px] mx-auto">
           <Image
             src={card.image}
             alt={card.title}
             width={300}
             height={200}
-            className="rounded-lg object-cover w-full h-[300px]"
+            className=" object-cover w-full h-[250px] lg:h-[300px]"
           />
-          <div className="mt-4 text-sm text-gray-500 flex justify-between items-center">
-            <span>{card.date}</span> | 
-            <span>{card.comments} Comments</span> | 
-            <span>By {card.author}</span>
+          <div className="mt-4 text-sm text-gray-500 flex justify-start items-center gap-2">  <span><Image src="/images/calendar.png" width={20} height={20} alt="calendar" /></span>
+            <span className="text-sm lg:text-base">{card.date}</span> / <span><Image src="/images/chat.png" width={20} height={20} alt="chat" /></span>
+            <span className="text-sm lg:text-base">{card.comments} Comments</span> / <span><Image src="/images/admin.png" width={20} height={20} alt="admin" /></span>
+            <span className="text-sm lg:text-base">By {card.author}</span>
           </div>
-          <Link href={`/blog/card/${card.id}`}> <h3 className="mt-4 text-lg font-bold">{card.title}</h3></Link>
-          <p className="mt-2 text-gray-700 text-sm py-2">{card.excerpt}</p>
+          <Link href={`/blog/card/${card.id}`}> <h3 className="mt-4 text-xl lg:text-2xl font-bold">{card.title}</h3></Link>
+          <p className="mt-2 text-gray-700 text-xs lg:text-sm py-2">{card.excerpt}</p>
           <Link href={`/blog/card/${card.id}`}>
-            <button className="mt-4 py-2 px-4 border-[1px] border-[#FF9F0D] text-[#FF9F0D] rounded-md">
-              Read More
+            <button className="mt-4 py-1 px-2 lg:py-2 lg:px-4 border-[1px] border-[#FF9F0D] text-[#FF9F0D] hover:bg-[#FF9F0D] hover:text-[white] rounded-md">
+              <Link href={`/blog/card/${card.id}`}>  Read More</Link>
+             
             </button>
           </Link>
         </div>
