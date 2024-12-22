@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Button from "../button";
+import Link from "next/link";
 
 export default function Chef() {
   return (
@@ -60,7 +61,9 @@ export default function Chef() {
 
       </div>
       <div className="text-center pt-6">
+        <Link href="/chef">
       <Button text="See More" bg="#000000" />
+      </Link>
       </div>
     </section>
   );

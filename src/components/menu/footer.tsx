@@ -17,7 +17,7 @@ export default function Footer() {
           <h2 className="text-white text-xl sm:text-2xl lg:text-[3xl] font-bold">
             <span className="text-[#FF9F0D]">St</span>ill You Need Our Support?
           </h2>
-          <p className="text-white text-center sm:text-left text-sm sm:text-md py-3">
+          <p className="text-white text-center px-2 sm:text-left text-sm sm:text-md py-3">
             {` Don’t wait, make a smart & logical quote here. It’s pretty easy.`}
           </p>
         </div>
@@ -27,9 +27,9 @@ export default function Footer() {
           <input
             type="email"
             placeholder="Enter Your Email"
-            className="px-2 py-2 sm:py-3 sm:px-4 bg-[#FF9F0D] text-white placeholder-white"
+            className="px-2 py-2 text-sm sm:text-lg sm:py-3 sm:px-4 bg-[#FF9F0D] text-white placeholder-white"
           />
-          <button className="bg-white text-[#FF9F0D] px-2 py-2 sm:py-3 sm:px-6 flex items-center">
+          <button className="bg-white text-sm sm:text-lg  text-[#FF9F0D] px-2 py-2 sm:py-3 sm:px-6 flex items-center">
             <span>Subscribe Now</span>
           </button>
         </div>
