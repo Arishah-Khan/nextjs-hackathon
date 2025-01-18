@@ -132,6 +132,7 @@
 //   originalPrice: number;
 //   image: any;
 //   tags: string[];
+//   id:string
 // }
 
 // const staticCategories = [
@@ -172,7 +173,7 @@
 
 //   const fetchFoods = async () => {
 //     try {
-//       const query = `*[_type == "food"]{_id, name, category, price, originalPrice, image , tags}`;
+//       const query = `*[_type == "food"]{_id,id, name, category, price, originalPrice, image , tags}`;
 //       const foods = await client.fetch(query);
 //       setAllFoods(foods);
 //     } catch (error) {
@@ -218,7 +219,7 @@
 //       <div className="flex flex-wrap lg:flex-nowrap gap-8 py-10 px-5">
 //         <section className="flex-1 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
 //           {currentFoods.map((food: Food) => (
-//             <Link href={`/shop/card/${food._id}`} key={food._id}>
+//             <Link href={`/shop/card/${food.id}`} key={food.id}>
 //               <div className="p-4 bg-white rounded-lg shadow hover:shadow-lg">
 //                 <Image
 //                   src={
@@ -329,7 +330,7 @@
 //         </aside>
 //       </div>
 
-//       <div className="flex justify-center items-center space-x-4 mt-10">
+//       <div className="flex justify-center items-center space-x-4 my-10">
 //         <button
 //           onClick={() => handlePageChange(currentPage - 1)}
 //           disabled={currentPage === 1}
