@@ -1,14 +1,42 @@
+"use client"
+
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Import useRouter for navigation
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import Link from 'next/link';
+import { auth } from '../../firebaseConfig';
+
 
 const SignInPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const router = useRouter(); // Initialize useRouter
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(''); // Reset error state
+
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password); // Sign in user
+      // Redirect to home page upon successful sign-in
+      router.push('/'); // Redirect to home page
+    } catch (err: any) {
+      setError(err.message); // Set error message
+      setLoading(false); // Stop loading
+    }
+  };
+
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 py-4">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-        {/* Sign-In Heading */}
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Sign In</h2>
 
-        {/* Sign-In Form */}
-        <form>
+        <form onSubmit={handleSubmit}>
           {/* Email Input */}
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
@@ -16,6 +44,8 @@ const SignInPage = () => {
               type="email"
               id="email"
               placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-md mt-1 focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
@@ -27,6 +57,8 @@ const SignInPage = () => {
               type="password"
               id="password"
               placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full p-3 border border-gray-300 rounded-md mt-1 focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
@@ -45,9 +77,13 @@ const SignInPage = () => {
           <button
             type="submit"
             className="w-full bg-orange-500 text-white py-3 rounded-md font-semibold hover:bg-orange-600 focus:outline-none"
+            disabled={loading}
           >
-            Sign In
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
+
+          {/* Error Message */}
+          {error && <div className="text-red-500 mt-4">{error}</div>}
 
           {/* Forgot Password Link */}
           <div className="mt-4 text-center">

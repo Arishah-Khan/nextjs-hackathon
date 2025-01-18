@@ -2,6 +2,8 @@
 
 import Button from "@/components/button";
 import HeroSection from "@/components/menu/heroSec";
+import ShoppingCartPage from "@/components/shoppingCartTest";
+import ShoppingCartModalTest from "@/components/shoppingCartTest";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -80,11 +82,10 @@ function ShoppingCart() {
     <div className="bg-[#0d0d0d]">
       <HeroSection pageTitle="Shopping Cart" page="Shopping Cart" />
     </div>
-  
+{/*   
     <div className="container mx-auto  px-2 md:px-4 py-6">
       <h1 className="text-2xl font-bold mb-4">Your Shopping Cart</h1>
   
-      {/* Cart Products Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full table-auto">
           <thead>
@@ -154,9 +155,7 @@ function ShoppingCart() {
         </table>
       </div>
   
-      {/* Coupon & Total Bill Section */}
       <div className="mt-6 flex flex-col lg:flex-row justify-between border-t pt-4">
-        {/* Coupon Section */}
         <div className="flex flex-col max-w-full lg:max-w-[500px] mb-6 lg:mb-0">
           <label htmlFor="coupon" className="text-lg font-semibold">
             Coupon Code
@@ -175,7 +174,6 @@ function ShoppingCart() {
           </div>
         </div>
   
-        {/* Total Bill Section */}
         <div className="flex flex-col text-right">
           <h2 className="text-xl font-bold">Total Bill</h2>
           <div className="mt-2">
@@ -192,7 +190,9 @@ function ShoppingCart() {
           </div>
         </div>
       </div>
-    </div>
+    </div> */}
+
+    <ShoppingCartPage />
   </main>
   
   );

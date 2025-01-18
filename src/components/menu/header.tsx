@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Inter } from "next/font/google";
 import { BiShoppingBag } from "react-icons/bi";
@@ -16,6 +16,12 @@ import {
 } from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
+import { useShoppingCart } from "use-shopping-cart";
+import { auth, db } from "../../../firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+import Image from "next/image";
+import { SiGnuprivacyguard } from "react-icons/si";
+
 
 
 // Apply the Inter font to the list items
@@ -24,6 +30,48 @@ const inter = Inter({ subsets: ["latin"] });
 const Header = () => {
 
   const pathname = usePathname();
+    const { cartCount = 0 } = useShoppingCart();
+     const [userImage, setUserImage] = useState<string | null>(null);
+      const [user, setUser] = useState<any | null>(null);
+      const [showLogoutOption, setShowLogoutOption] = useState(false);
+    
+    
+    
+      useEffect(() => {
+        const unsubscribe = auth.onAuthStateChanged((user) => {
+          if (user) {
+            setUser(user);
+            const userDocRef = doc(db, "users", user.uid);
+    
+            getDoc(userDocRef)
+              .then((docSnap) => {
+                if (docSnap.exists()) {
+                  const profileImageUrl = docSnap.data()?.profileImageUrl;
+                  setUserImage(profileImageUrl || null);
+                }
+              })
+              .catch(console.error);
+          } else {
+            setUser(null);
+            setUserImage(null);
+          }
+        });
+    
+        return () => unsubscribe();
+      }, []);
+    
+      const handleSignInClick = () => {
+        router.push("/signUp");
+      };
+    
+      const handleLogoutClick = () => {
+        auth.signOut().then(() => {
+          setUser(null);
+          setShowLogoutOption(false);
+          router.push("/"); // Redirect to homepage after logout
+        });
+      };
+  
 
   const navItems = [
     { name: "Home", link: "/" },
@@ -37,9 +85,8 @@ const Header = () => {
 
   const router = useRouter();
 
-  // Handler to navigate to the sign-in page
-  const handleSignInClick = () => {
-    router.push('/signUp'); // Redirect to the sign-in page
+  const handleCartClick = () => {
+    router.push("/shop/shopping-cart");
   };
 
   return (
@@ -94,15 +141,47 @@ const Header = () => {
 
           {/* User Icon */}
           <button
-      className="text-white hover:text-gray-300"
-      onClick={handleSignInClick} // Add the click handler
-    >
-      <FaUser size="24" /> {/* User icon */}
-    </button>
+                className="text-white hover:text-gray-300 flex justify-center items-center"
+                onClick={() => {
+                  if (user) {
+                    setShowLogoutOption(!showLogoutOption);
+                  } else {
+                    handleSignInClick();
+                  }
+                }}
+              >
+                {user ? (
+                  showLogoutOption ? (
+                    <div
+                      className="absolute bg-white text-black rounded shadow-md p-2"
+                      onClick={handleLogoutClick}
+                    >
+                      Logout
+                    </div>
+                  ) : userImage ? (
+                    <Image
+                      src={userImage}
+                      alt="User"
+                      width="20"
+                      height="20"
+                      className="w-6 h-6 border-[1.5px] border-white rounded-full object-contain"
+                    />
+                  ) : (
+                    <FaUser size="22" />
+                  )
+                ) : (
+                  <SiGnuprivacyguard size="22" />
+                )}
+              </button>
 
           {/* Shopping Bag Icon */}
-          <button className="text-white hover:text-gray-300">
+          <button className="text-white hover:text-gray-300" onClick={handleCartClick}>
             <BiShoppingBag size="24" />
+            {cartCount > 0 && (
+              <span className="absolute top-0 right-0 text-xs text-white bg-[#FF9F0D] rounded-full w-4 h-4 flex justify-center items-center">
+                {cartCount}
+              </span>
+            )}
           </button>
         </div>
       </div>
@@ -161,9 +240,39 @@ const Header = () => {
           </button>
 
           {/* User Icon */}
-          <button className="text-white hover:text-gray-300">
-            <FaUser size="20" /> {/* User icon */}
-          </button>
+         <button
+               className="text-white hover:text-gray-300 flex justify-center items-center"
+               onClick={() => {
+                 if (user) {
+                   setShowLogoutOption(!showLogoutOption);
+                 } else {
+                   handleSignInClick();
+                 }
+               }}
+             >
+               {user ? (
+                 showLogoutOption ? (
+                   <div
+                     className="absolute bg-white text-black rounded shadow-md p-2"
+                     onClick={handleLogoutClick}
+                   >
+                     Logout
+                   </div>
+                 ) : userImage ? (
+                   <Image
+                     src={userImage}
+                     alt="User"
+                     width="20"
+                     height="20"
+                     className="w-6 h-6 border-[1.5px] border-white rounded-full object-contain"
+                   />
+                 ) : (
+                   <FaUser size="22" />
+                 )
+               ) : (
+                 <SiGnuprivacyguard size="22" />
+               )}
+             </button>
 
           {/* Shopping Bag Icon */}
           <button className="text-white hover:text-gray-300">
