@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getAnalytics } from "firebase/analytics";
+import { getAnalytics, isSupported } from "firebase/analytics";
 
 // Firebase configuration
 const firebaseConfig = {
@@ -20,6 +20,19 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase services
 const auth = getAuth(app);
 const db = getFirestore(app);
-const analytics = getAnalytics(app);
+
+// Initialize Analytics only on the client-side (if supported)
+let analytics;
+
+const initializeAnalytics = async () => {
+  if (typeof window !== 'undefined') {
+    const analyticsSupported = await isSupported();
+    if (analyticsSupported) {
+      analytics = getAnalytics(app);
+    }
+  }
+};
+
+initializeAnalytics();
 
 export { auth, db, analytics };

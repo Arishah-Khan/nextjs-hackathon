@@ -1,25 +1,34 @@
 "use client"
 
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation'; // Import useRouter for navigation
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import Link from 'next/link';
 import { auth } from '../../firebaseConfig';
-
 
 const SignInPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [firebaseReady, setFirebaseReady] = useState(false); // State to check if we're on the client-side
   const router = useRouter(); // Initialize useRouter
+
+  // Run Firebase-related code only in the client-side (in useEffect)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setFirebaseReady(true); // Client-side, so we can initialize Firebase
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(''); // Reset error state
 
+    if (!firebaseReady) {
+      return; // Firebase hasn't been initialized yet
+    }
 
     try {
       await signInWithEmailAndPassword(auth, email, password); // Sign in user
@@ -63,21 +72,11 @@ const SignInPage = () => {
             />
           </div>
 
-          {/* Remember Me Checkbox */}
-          <div className="flex items-center mb-4">
-            <input
-              type="checkbox"
-              id="rememberMe"
-              className="w-4 h-4 border-gray-300 text-orange-500 focus:ring-2 focus:ring-orange-500"
-            />
-            <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-700">Remember Me</label>
-          </div>
-
           {/* Sign-In Button */}
           <button
             type="submit"
             className="w-full bg-orange-500 text-white py-3 rounded-md font-semibold hover:bg-orange-600 focus:outline-none"
-            disabled={loading}
+            disabled={loading || !firebaseReady}
           >
             {loading ? 'Signing In...' : 'Sign In'}
           </button>
@@ -92,28 +91,14 @@ const SignInPage = () => {
             </Link>
           </div>
 
-          {/* Social Sign In Buttons */}
-          <div className="mt-6 flex flex-col gap-4">
-            <button
-              className="w-full flex items-center justify-center bg-red-600 text-white py-3 rounded-md font-semibold hover:bg-red-700 focus:outline-none"
-            >
-              Sign In with Google
-            </button>
-            <button
-              className="w-full flex items-center justify-center bg-black text-white py-3 rounded-md font-semibold hover:bg-gray-800 focus:outline-none"
-            >
-              Sign In with Apple
-            </button>
+          {/* Sign Up Link */}
+          <div className="mt-6 text-center text-sm text-gray-500">
+            {` Don't have an account?`}
+            <Link href="/signUp" className="text-orange-500 hover:text-orange-600">
+              Sign Up
+            </Link>
           </div>
         </form>
-
-        {/* Sign Up Link */}
-        <div className="mt-6 text-center text-sm text-gray-500">
-         {` Don't have an account?`}
-          <Link href="/signUp" className="text-orange-500 hover:text-orange-600">
-            Sign Up
-          </Link>
-        </div>
       </div>
     </div>
   );
