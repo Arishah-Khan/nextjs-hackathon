@@ -3,7 +3,8 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import CartProvider from "@/providers/cartProvider";
 import ToastProvider from "@/providers/toast-provider";
-
+import { ToastContainer } from "react-toastify";  
+import "react-toastify/dist/ReactToastify.css";  
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,8 +33,9 @@ export default function RootLayout({
       <body className={`${inter.variable} ${playfair.variable}`}>
         <CartProvider>
           <ToastProvider />
-        
-         
+          
+          <ToastContainer /> 
+
           {children}
         </CartProvider>
       </body>

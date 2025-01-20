@@ -11,6 +11,7 @@ const Checkout = () => {
     name: string;
     price: number;
     image: string;
+    quantity: number;
   };
 
   const [shippingInfo, setShippingInfo] = useState({
@@ -125,7 +126,7 @@ const Checkout = () => {
   };
 
   return (
-    <div className="checkout-container max-w-5xl mx-auto p-6">
+    <div className="checkout-container max-w-5xl mx-auto p-2 md:p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Side - Shipping Information */}
         <div className="shipping-info">
@@ -218,37 +219,84 @@ const Checkout = () => {
         <div className="product-details">
           <h2 className="text-2xl font-semibold mb-4">Product Details</h2>
           <div className="space-y-4">
+            {/* Render the headings once */}
+            <div className="flex justify-between font-semibold">
+              <div className="w-1/5 text-center">Image</div>
+              <div className="w-1/5 text-center">Name</div>
+              <div className="w-1/5 text-center">Quantity</div>
+              <div className="w-1/5 text-center">Price</div>
+              <div className="w-1/5 text-center">Total</div>{" "}
+              {/* Add total column in heading */}
+            </div>
+
+            {/* Loop through cartDetails once for the product details */}
             {cartDetails &&
               Object.entries(cartDetails).map(([key, product]) => {
                 const item = product as Product;
+                const productTotal = item.quantity * item.price; // Calculate total for each item
                 return (
                   <div key={key} className="flex justify-between items-center">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      width="20"
-                      height="20"
-                      className="w-16 h-16 object-cover"
-                    />
-                    <span className="font-semibold">{item.name}</span>
-                    <span>${item.price}</span>
+                    {/* Image Column */}
+                    <div className="w-1/5 text-center">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        width="20"
+                        height="20"
+                        className="w-12 h-12 md:w-16 md:h-16 object-cover"
+                      />
+                    </div>
+
+                    {/* Name Column */}
+                    <div className="w-1/5 text-center">
+                      <span className="text-sm md:text-base">{item.name}</span>
+                    </div>
+
+                    {/* Quantity Column */}
+                    <div className="w-1/5 text-center">
+                      <span className="text-sm md:text-base">{item.quantity}</span>
+                    </div>
+
+                    {/* Price Column */}
+                    <div className="w-1/5 text-center">
+                      <span className="text-sm md:text-base">${item.price}</span>
+                    </div>
+
+                    {/* Total Column (Calculated as Quantity x Price) */}
+                    <div className="w-1/5 text-center">
+                      <span className="text-sm md:text-base">${productTotal.toFixed(2)}</span>
+                    </div>
                   </div>
                 );
               })}
+
+            {/* Total Price for All Items */}
+            <div className="flex justify-between font-semibold mt-4">
+              <div className="w-1/5 text-center">Total</div>
+              <div>
+                $
+                {Object.entries(cartDetails)
+                  .reduce((acc, [key, product]) => {
+                    const item = product as Product;
+                    return acc + item.quantity * item.price;
+                  }, 0)
+                  .toFixed(2)}
+              </div>
+            </div>
           </div>
+
           {discount > 0 && (
             <div className="mt-4 flex justify-between items-center">
-              <p className="font-bold text-black">
-                Discount: 
-              </p>
-              <p>${(discount).toFixed(2)}</p> 
+              <p className="font-bold text-black">Discount:</p>
+              <p>${discount.toFixed(2)}</p>
             </div>
           )}
-          <div className="mt-4">
-            <p className="font-semibold">
-              Subtotal: $
-              {((totalPrice || 0) -  discount).toFixed(2)}
-            </p>
+
+          <div className="mt-4 border-t border-gray-300"></div>
+
+          <div className="mt-4 flex justify-between items-center">
+            <p className="font-semibold">Subtotal:</p>
+            <p>${((totalPrice || 0) - discount).toFixed(2)}</p>
           </div>
           {/* Shipping Rates */}
           <div className="mt-4">

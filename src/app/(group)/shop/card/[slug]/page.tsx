@@ -29,6 +29,8 @@ import { client } from "@/sanity/lib/client";
 import AddToCart from "@/components/addToCart";
 import Card from "@/components/restaurant/cards";
 import WishlistButton from "@/components/addToWishList";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 interface Card {
@@ -83,6 +85,7 @@ async function Page({ params }: { params: Promise<{ slug: string }> }) {
     // console.log("Fetched Products:", products); // Debug: Check the fetched products
 
     if (!products || products.length === 0) {
+      toast.error("Product not found.");
       return (
         <div className="text-center text-gray-500">Product not found.</div>
       );
@@ -90,7 +93,7 @@ async function Page({ params }: { params: Promise<{ slug: string }> }) {
 
     const product = products[0];
     
-    console.log("Updated Product:", product); // Debug: Check the updated product
+    console.log("Updated Product:", product); 
     const cards = await client
       .fetch(
         `*[_type == "food"]{
@@ -103,8 +106,9 @@ async function Page({ params }: { params: Promise<{ slug: string }> }) {
     }`
       )
       .catch((error) => {
+        toast.error("Failed to fetch related products.");
         console.error("Failed to fetch products:", error);
-        return []; // Fallback to empty array
+        return []; 
       });
 
     return (
@@ -336,6 +340,7 @@ async function Page({ params }: { params: Promise<{ slug: string }> }) {
       </main>
     );
   } catch (error) {
+    toast.error("Error loading product details.");
     console.error("Error fetching product:", error);
     return (
       <div className="text-center text-red-500">
