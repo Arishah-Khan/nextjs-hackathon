@@ -1,19 +1,18 @@
-"use client"
+"use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
 import { useShoppingCart } from "use-shopping-cart";
 
-// Define the Product type
-type Product = {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-};
-
 const Checkout = () => {
+  type Product = {
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+  };
+
   const [shippingInfo, setShippingInfo] = useState({
     firstName: "",
     lastName: "",
@@ -32,9 +31,10 @@ const Checkout = () => {
     cvv: "",
   });
 
-  const [shippingRates, setShippingRates] = useState<any[]>([]); // State to hold shipping rates
-  const [selectedRate, setSelectedRate] = useState<any>(null); // State to hold selected shipping rate
-  const [finalTotalPrice, setFinalTotalPrice] = useState<number>(0); // State for final total including shipping
+  const [shippingRates, setShippingRates] = useState<any[]>([]);
+  const [selectedRate, setSelectedRate] = useState<any>(null);
+  const [finalTotalPrice, setFinalTotalPrice] = useState<number>(0);
+  const [discount, setDiscount] = useState<number>(0); // State for the discount
 
   const { cartDetails, totalPrice, clearCart } = useShoppingCart();
 
@@ -56,15 +56,15 @@ const Checkout = () => {
 
   const fetchShippingRates = async () => {
     const shippingDetails = {
-      shippingInfo,  // Shipping Info
-      cartDetails,   // Cart Details
+      shippingInfo,
+      cartDetails,
     };
 
     try {
-      const response = await fetch('/api/get-shipping-rates', {
-        method: 'POST',
+      const response = await fetch("/api/get-shipping-rates", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(shippingDetails),
       });
@@ -73,47 +73,56 @@ const Checkout = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json();  // Parse the JSON response
+      const data = await response.json();
       console.log("API Response Data: ", data);
 
       if (data.success) {
-        setShippingRates(data.rates);  // Set shipping rates in state
-        // Set initial final total (including shipping) based on default rate
+        setShippingRates(data.rates);
         if (data.rates.length > 0) {
           setSelectedRate(data.rates[0]);
           setFinalTotalPrice(totalPrice + data.rates[0].amount);
         }
       } else {
-        console.error('Failed to fetch shipping rates:', data.error);
+        console.error("Failed to fetch shipping rates:", data.error);
       }
     } catch (error) {
-      console.error('Error during fetch request:', error);
+      console.error("Error during fetch request:", error);
     }
   };
 
   const handleShippingRateSelect = (rate: any) => {
-    setSelectedRate(rate);  // Set the selected shipping rate
-    setFinalTotalPrice(Number(totalPrice) + Number(rate.amount));
+    setSelectedRate(rate);
+    setFinalTotalPrice(Number(totalPrice) + Number(rate.amount) - discount);
   };
 
   useEffect(() => {
-    // Ensure the initial total is updated when `totalPrice` changes
-    if (selectedRate) {
-      setFinalTotalPrice(Number(totalPrice) + Number(selectedRate.amount));
+    const storedDiscount = localStorage.getItem("cartDiscount");
+
+    console.log("Stored Discount: ", storedDiscount); // For debugging
+
+    // Ensure the discount value is properly converted to a number
+    if (storedDiscount) {
+      setDiscount(Number(storedDiscount)); // Convert string to number
+    } else {
+      setDiscount(0); // Default to 0 if no discount is found
     }
-  }, [selectedRate, totalPrice]);
+
+    if (selectedRate) {
+      setFinalTotalPrice(
+        Number(totalPrice) + Number(selectedRate.amount) - discount
+      );
+    }
+  }, [selectedRate, totalPrice, discount]);
 
   const router = useRouter();
 
-  const backCart = ()=>{
-    router.push("/shop/shopping-cart")
-  }
+  const backCart = () => {
+    router.push("/shop/shopping-cart");
+  };
 
-  const placedOrder = ()=>{
-    router.push("/confirm")
-  }
-
-
+  const placedOrder = () => {
+    router.push("/confirm");
+  };
 
   return (
     <div className="checkout-container max-w-5xl mx-auto p-6">
@@ -209,23 +218,38 @@ const Checkout = () => {
         <div className="product-details">
           <h2 className="text-2xl font-semibold mb-4">Product Details</h2>
           <div className="space-y-4">
-            {cartDetails && Object.entries(cartDetails).map(([key, product]) => {
-              const item = product as Product;  // Type assertion to Product
-              return (
-                <div key={key} className="flex justify-between items-center">
-                  <Image src={item.image} alt={item.name} width="20" height="20" className="w-16 h-16 object-cover" />
-                  <span className="font-semibold">{item.name}</span>
-                  <span>${item.price}</span>
-                </div>
-              );
-            })}
+            {cartDetails &&
+              Object.entries(cartDetails).map(([key, product]) => {
+                const item = product as Product;
+                return (
+                  <div key={key} className="flex justify-between items-center">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      width="20"
+                      height="20"
+                      className="w-16 h-16 object-cover"
+                    />
+                    <span className="font-semibold">{item.name}</span>
+                    <span>${item.price}</span>
+                  </div>
+                );
+              })}
           </div>
-
-          {/* Subtotal */}
+          {discount > 0 && (
+            <div className="mt-4 flex justify-between items-center">
+              <p className="font-bold text-black">
+                Discount: 
+              </p>
+              <p>${(discount).toFixed(2)}</p> 
+            </div>
+          )}
           <div className="mt-4">
-            <p className="font-semibold">Subtotal: ${totalPrice}</p>
+            <p className="font-semibold">
+              Subtotal: $
+              {((totalPrice || 0) -  discount).toFixed(2)}
+            </p>
           </div>
-
           {/* Shipping Rates */}
           <div className="mt-4">
             <button
@@ -249,7 +273,9 @@ const Checkout = () => {
                           checked={selectedRate?.service === rate.service}
                           onChange={() => handleShippingRateSelect(rate)}
                         />
-                        <span>{rate.service}: ${rate.amount}</span>
+                        <span>
+                          {rate.service}: ${rate.amount}
+                        </span>
                         <p className="text-sm text-gray-600">
                           Estimated Delivery: {rate.estimated_days} days
                         </p>
@@ -263,14 +289,14 @@ const Checkout = () => {
               </div>
             )}
           </div>
-
           {/* Total */}
           {selectedRate && (
             <div className="mt-4">
-              <p className="font-semibold">Total (including Shipping): ${finalTotalPrice}</p>
+              <p className="font-semibold">
+                Total (including Shipping and Discount): ${finalTotalPrice}
+              </p>
             </div>
           )}
-
           {/* Place Order Button */}
           <button
             onClick={placedOrder}
@@ -285,4 +311,3 @@ const Checkout = () => {
 };
 
 export default Checkout;
-

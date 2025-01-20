@@ -35,8 +35,6 @@ const Header = () => {
   const [user, setUser] = useState<any | null>(null);
   const [showLogoutOption, setShowLogoutOption] = useState(false);
 
-
-
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -68,7 +66,7 @@ const Header = () => {
     auth.signOut().then(() => {
       setUser(null);
       setShowLogoutOption(false);
-      router.push("/"); // Redirect to homepage after logout
+      router.push("/"); 
     });
   };
 
@@ -135,56 +133,56 @@ const Header = () => {
             />
           </div>
 
-  
-
           {/* Shopping Bag Icon */}
-          <button className="text-white hover:text-gray-300" onClick={handleCartClick}>
+          <button
+            className="relative text-white hover:text-gray-300"
+            onClick={handleCartClick}
+          >
             <BiShoppingBag size="24" />
+
             {cartCount > 0 && (
-              <span className="absolute top-0 right-0 text-xs text-white bg-[#FF9F0D] rounded-full w-4 h-4 flex justify-center items-center">
+              <span className="absolute top-[-5px] right-[-5px] text-xs text-white bg-[#FF9F0D] rounded-full w-4 h-4 flex justify-center items-center">
                 {cartCount}
               </span>
             )}
           </button>
 
-
           <button
-      className="text-white hover:text-gray-300 flex justify-center items-center"
-      onClick={() => {
-        if (user) {
-          setShowLogoutOption(!showLogoutOption);
-        } else {
-          handleSignInClick();
-        }
-      }}
-    >
-      {user ? (
-        showLogoutOption ? (
-          <div
-            className="absolute bg-white text-black rounded shadow-md p-2"
-            onClick={handleLogoutClick}
+            className="text-white hover:text-gray-300 flex justify-center items-center"
+            onClick={() => {
+              if (user) {
+                setShowLogoutOption(!showLogoutOption);
+              } else {
+                handleSignInClick();
+              }
+            }}
           >
-            Logout
-          </div>
-        ) : userImage ? (
-          <Image
-            src={userImage}
-            alt="User"
-            width="20"
-            height="20"
-            className="w-6 h-6 border-[1.5px] border-white rounded-full object-contain"
-          />
-        ) : (
-          <FaUser size="22" />
-        )
-      ) : (
-        <SiGnuprivacyguard size="22" />
-      )}
-    </button>
+            {user ? (
+              showLogoutOption ? (
+                <div
+                  className="absolute bg-white text-black rounded shadow-md p-2"
+                  onClick={handleLogoutClick}
+                >
+                  Logout
+                </div>
+              ) : userImage ? (
+                <Image
+                  src={userImage}
+                  alt="User"
+                  width="20"
+                  height="20"
+                  className="w-6 h-6 border-[1.5px] border-white rounded-full object-contain"
+                />
+              ) : (
+                <FaUser size="22" />
+              )
+            ) : (
+              <SiGnuprivacyguard size="22" />
+            )}
+          </button>
         </div>
       </div>
 
-      {/* Mobile Navigation (Hamburger Menu) */}
       <div className="md:hidden flex items-center justify-between px-2 sm:px-5 py-4">
         <div className="flex-1">
           <h1
@@ -198,7 +196,6 @@ const Header = () => {
           </h1>
         </div>
 
-        {/* Hamburger Menu Trigger */}
         <Sheet>
           <SheetTrigger>
             <IoMenu size="30" className="text-white cursor-pointer" />
@@ -233,6 +230,63 @@ const Header = () => {
                 )
               )}
             </ul>
+
+             <div className="flex items-center justify-center  pt-4 space-x-6 ml-auto">
+                          {" "}
+                          {/* ml-auto to push icons to the right */}
+                          {/* Search Icon */}
+                          <button className="text-white hover:text-gray-300">
+                            <FiSearch size="20" />
+                          </button>
+                          {/* User Icon */}
+                          <button
+                            className="text-white hover:text-gray-300 flex justify-center items-center"
+                            onClick={() => {
+                              if (user) {
+                                setShowLogoutOption(!showLogoutOption);
+                              } else {
+                                handleSignInClick();
+                              }
+                            }}
+                          >
+                            {user ? (
+                              showLogoutOption ? (
+                                <div
+                                  className="absolute bg-white text-black rounded shadow-md p-2"
+                                  onClick={handleLogoutClick}
+                                >
+                                  Logout
+                                </div>
+                              ) : userImage ? (
+                                <Image
+                                  src={userImage}
+                                  alt="User"
+                                  width="20"
+                                  height="20"
+                                  className="w-6 h-6 border-[1.5px] border-white rounded-full object-contain"
+                                />
+                              ) : (
+                                <FaUser size="22" />
+                              )
+                            ) : (
+                              <SiGnuprivacyguard size="22" />
+                            )}
+                          </button>
+                          {/* Shopping Bag Icon */}
+                          <button
+                            className="relative text-white hover:text-gray-300"
+                            onClick={handleCartClick}
+                          >
+                            <BiShoppingBag size="24" />
+            
+                            {cartCount > 0 && (
+                              <span className="absolute top-[-5px] right-[-5px] text-xs text-white bg-[#FF9F0D] rounded-full w-4 h-4 flex justify-center items-center">
+                                {cartCount}
+                              </span>
+                            )}
+                          </button>
+                        </div>
+                        
           </SheetContent>
         </Sheet>
       </div>

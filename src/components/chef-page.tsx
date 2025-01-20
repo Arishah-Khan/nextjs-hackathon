@@ -17,22 +17,21 @@ interface Chef {
 }
 
 function ChefPage() {
-  // Define the state with type `Chef[]` (array of Chef objects)
   const [chefs, setChefs] = useState<Chef[]>([]);
 
   const fetchChefs = async () => {
     try {
       const query = `*[_type == "chef"]{_id, name, position, specialty, image, description, available}`;
       const fetchedChefs = await client.fetch(query);
-      setChefs(fetchedChefs); // Update state with fetched chefs
+      setChefs(fetchedChefs); 
     } catch (error) {
       console.error("Failed to fetch chefs:", error);
-      setChefs([]); // In case of error, set chefs to an empty array
+      setChefs([]); 
     }
   };
 
   useEffect(() => {
-    fetchChefs(); // Fetch chefs when the component mounts
+    fetchChefs(); 
   }, []);
 
   return (

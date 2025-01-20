@@ -70,7 +70,7 @@
       description: 'Availability status of the food item',
     },
     {
-      name: 'id',
+      name: 'slug',
       type: 'string',
       title: 'Food ID',
       description: 'Unique identifier for the food item',
