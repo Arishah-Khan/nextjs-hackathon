@@ -1,0 +1,50 @@
+Test Case ID,Test Case Description,Test Steps,Expected Result,Actual Result,Status,Severity Level,Assigned To,Remarks
+
+TC01,Verify food product display,"1. Open website and navigate to Shop page. 2. Check food items are displayed with name, image, original price with line-through, and discounted price.","Food items displayed with name, image, original price with line-through, and discounted price.","All products are shown correctly with name, image, and prices as expected. Original price has line-through.",Passed,Medium,-,Test passed. No issues with product display or pricing.
+,,,,,,,,
+TC02,Verify Dynamic Routing for Food Details Page,1. Navigate to the food product page from shop.,The correct product page loads for the selected item.,"The correct product page with all details (name, description, price, benefits, category) loads correctly.",Passed,Medium,-,Test passed. All details are displayed.
+,,"2. Verify that product details like name, description, price, benefits, and category are displayed correctly.",All product details should be visible on the page.,"All product details (name, description, price, benefits, category) are displayed correctly.",Passed,Medium,-,All data fetched correctly from Sanity.
+,,,,,,,,
+TC03,Verify that the category filter functionality correctly displays food items according to selected categories using radio buttons.,Navigate to the Shop page where all food items are displayed.,"When a category is selected, only food items from that category should be visible. All relevant details (name, price, description, etc.) of the filtered items should be displayed correctly.","(Write your result, e.g., ""Category filter works as expected for all categories"".)",Passed/Failed,Medium,Optional,"(Mention any notes, e.g., ""Filtering works for all categories except 'Non Veg'"".)"
+,,"Identify the radio button group for food categories (e.g., Sandwich, Burger, Dessert, etc.).",,,,,,
+,,"Select a category, for example, ""Burger"" by clicking its radio button.",,,,,,
+,,"Check if only items belonging to the ""Burger"" category are displayed.",,,,,,
+,,"Repeat the steps for other categories like ""Drink"" or ""Pizza"".",,,,,,
+,,,,,,,,
+TC04,Verify that the search bar allows users to search for food items by name and displays matching results.,1. Navigate to the Shop page where the search bar is located.,"When a user types a food name (e.g., ""Pizza""), only food items containing ""Pizza"" should be displayed, showing correct name, price, description, and other details.","(Write your result, e.g., ""Search functionality correctly displays matching food items."")",Passed/Failed,Medium,Optional,The search bar correctly handles inputs regardless of letter case (case-insensitive).
+,,"2. Click on the search bar and type the name of a food item, such as ""Pizza"".",,,,,,
+,,3. Press Enter or click the search button.,,,,,,
+,,4. Observe if only food items matching the search term are displayed.,,,,,,
+,,,,,,,,
+TC05,Verify that users can filter food items based on price range using a slider from $0 to $800.,1. Navigate to the Shop page.,Only food items with prices within the selected range should be displayed (between $100 and $500).,"(Write your result, e.g., ""Food items are correctly filtered according to the selected price range.""",Passed/Failed,Medium,Optional,The slider filters items dynamically as the price range changes.
+,,2. Use the price range slider to select a range between $100 and $500.,,,,,,
+,,3. Observe the displayed food items.,,,,,,
+,,,,,,,,
+TC06,"Verify that pagination allows users to navigate through multiple pages of food items, displaying 12 items per page.",1. Navigate to the Shop page.,"The correct number of food items (12) should be displayed per page, and navigation buttons should load the corresponding items correctly.","(Write your result, e.g., ""Pagination works as expected, showing 12 items per page and allowing navigation between pages."")",Passed/Failed,Medium,(Optional),Pagination dynamically displays items as the user navigates between pages.
+,,2. Observe that only the first 12 food items are displayed initially.,,,,,,
+,,"3. Click the ""Next"" button or a page number to navigate to the next set of items.",,,,,,
+,,"4. Use the ""Previous"" button to go back to the first page",,,,,,
+,,,,,,,,
+TC07,"Verify that the ""Add to Cart"" button allows adding food items to the cart, and quantity can be adjusted using increment and decrement buttons.",1. Navigate to the Shop page.,"Clicking ""Add to Cart"" should add the item to the cart.","Write your result, e.g., ""Add to Cart, increment, and decrement functionality work as expected. Quantity updates and total price are correct."")",Passed/Failed,High,Optional,Quantity changes dynamically with the use-shopping-cart library. Buttons correctly update item count.
+,,"2. Select a food item and click the ""Add to Cart"" button.",The increment button should increase the item quantity.,,,,,
+,,3. Use the increment (+) button to increase the quantity.,The decrement button should decrease the item quantity (without going below zero).,,,,,
+,,4. Use the decrement (-) button to decrease the quantity.,The cart should display the correct updated total.,,,,,
+,,5. Check the cart for updated quantity and item details.,,,,,,
+,,,,,,,,
+TC08,"Verify that applying a voucher code applies a discount to the cart total, stores the discount in local storage, and displays it on the checkout page.",1. Add items to the cart.,The discount amount should be subtracted from the total price when a valid voucher is entered.,"(Write your result after testing, e.g., ""Discount applied successfully, total updated, and discount value shown on checkout page."")",Passed/Failed,High,Optional,Ensure invalid voucher codes show an error message. Discount value persists correctly between pages.
+,,2. Enter a valid voucher code in the discount input field.,The discount should be saved in local storage.,,,,,
+,,"3. Click the ""Apply Discount"" button.",The checkout page should display the discounted total and the applied discount amount.,,,,,
+,,4. Verify that the cart total is reduced by the discount amount.,,,,,,
+,,"5. Click the ""Proceed to Checkout"" button.",,,,,,
+,,6. Check if the discount value is displayed on the checkout page.,,,,,,
+,,,,,,,,
+TC09,"Verify that the total price, including quantity-based calculations and discounts, is correctly displayed on the cart and checkout pages.",1. Add multiple food items to the cart.,"The total price should reflect the correct sum of (price � quantity) for each item. Discount should be subtracted correctly. The checkout page should display the final total, item details, and discount information","(Write your result after testing, e.g., ""Total price and discount correctly applied and displayed on checkout page.""",Passed/Failed,High,(Optional),Ensure calculations are accurate for all quantity changes and discounts persist across navigation.
+,,2. Increase or decrease the quantity of food items using the increment and decrement buttons.,,,,,,
+,,3. Apply a valid discount voucher.,,,,,,
+,,"4. Verify that the total price is updated correctly, subtracting the discount.",,,,,,
+,,"5. Click the ""Proceed to Checkout"" button.",,,,,,
+,,6. Confirm that the checkout page displays the final total with quantity adjustments and applied discounts.,,,,,,
+,,,,,,,,
+TC10,"Verify that when API data fetch fails, the fallback UI is displayed to inform users about the error.",1. Simulate an API failure by disabling the network or introducing an error in the API endpoint.,"The fallback UI or a user-friendly error message should be displayed, guiding users without breaking the page layout.","(Write the result, e.g., ""Fallback UI was shown correctly with an error message: 'Data failed to load. Please try again later.)'""",Passed/Failed,High,Optional,Ensure fallback UI design is responsive and descriptive. Check console logs to avoid uncaught exceptions.
+,,"2. Load the page where API data is fetched (e.g., product listing or category view).",,,,,,
+,,3. Observe whether fallback UI or an error message is displayed instead of product data.,,,,,,
