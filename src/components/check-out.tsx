@@ -406,7 +406,7 @@ const Checkout = () => {
   const [finalTotalPrice, setFinalTotalPrice] = useState<number>(0);
   const [discount, setDiscount] = useState<number>(0);
 
-  // Ensure that cartDetails is treated as CartDetails
+  
   const { cartDetails, totalPrice, clearCart } = useShoppingCart();
 
   const handleShippingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -599,56 +599,58 @@ const Checkout = () => {
 
             {/* Loop through cartDetails */}
             {cartDetails &&
-              Object.entries(cartDetails).map(([key, product]) => {
-                const item = product as Product;
-                const productTotal = item.quantity * item.price; // Calculate total for each item
-                return (
-                  <div key={key} className="flex justify-between items-center">
-                    {/* Image Column */}
-                    <div className="w-1/5 text-center">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        width="20"
-                        height="20"
-                        className="w-12 h-12 md:w-16 md:h-16 object-cover"
-                      />
-                    </div>
+  Object.entries(cartDetails || {}).map(([key, product]) => {
+    const item = product as Product;
+    const productTotal = item.quantity * item.price; // Calculate total for each item
+    return (
+      <div key={key} className="flex justify-between items-center">
+        {/* Image Column */}
+        <div className="w-1/5 text-center">
+          <Image
+            src={item.image}
+            alt={item.name}
+            width="20"
+            height="20"
+            className="w-12 h-12 md:w-16 md:h-16 object-cover"
+          />
+        </div>
 
-                    {/* Name Column */}
-                    <div className="w-1/5 text-center">
-                      <span className="text-sm md:text-base">{item.name}</span>
-                    </div>
+        {/* Name Column */}
+        <div className="w-1/5 text-center">
+          <span className="text-sm md:text-base">{item.name}</span>
+        </div>
 
-                    {/* Quantity Column */}
-                    <div className="w-1/5 text-center">
-                      <span className="text-sm md:text-base">{item.quantity}</span>
-                    </div>
+        {/* Quantity Column */}
+        <div className="w-1/5 text-center">
+          <span className="text-sm md:text-base">{item.quantity}</span>
+        </div>
 
-                    {/* Price Column */}
-                    <div className="w-1/5 text-center">
-                      <span className="text-sm md:text-base">${item.price}</span>
-                    </div>
+        {/* Price Column */}
+        <div className="w-1/5 text-center">
+          <span className="text-sm md:text-base">${item.price}</span>
+        </div>
 
-                    {/* Total Column (Calculated as Quantity x Price) */}
-                    <div className="w-1/5 text-center">
-                      <span className="text-sm md:text-base">${productTotal.toFixed(2)}</span>
-                    </div>
-                  </div>
-                );
-              })}
+        {/* Total Column */}
+        <div className="w-1/5 text-center">
+          <span className="text-sm md:text-base">${productTotal.toFixed(2)}</span>
+        </div>
+      </div>
+    );
+  })}
+
 
             {/* Total Price for All Items */}
             <div className="flex justify-between font-semibold mt-4">
               <div className="w-1/5 text-center">Total</div>
               <div>
                 $
-                {Object.entries(cartDetails)
-                  .reduce((acc, [key, product]) => {
-                    const item = product as Product;
-                    return acc + item.quantity * item.price;
-                  }, 0)
-                  .toFixed(2)}
+                ${Object.entries(cartDetails || {})
+  .reduce((acc, [key, product]) => {
+    const item = product as Product;
+    return acc + item.quantity * item.price;
+  }, 0)
+  .toFixed(2)}
+
               </div>
             </div>
           </div>
