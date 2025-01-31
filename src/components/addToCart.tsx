@@ -5,15 +5,15 @@ import { urlFor } from "@/sanity/lib/image";
 import { useShoppingCart } from "use-shopping-cart";
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ClipLoader } from "react-spinners"; // Loader
 
 export interface ProductCart {
   id: string;
   name: string;
-  description: string;
   currency: string;
+  description: string;
   image: any;
   price_id: string;
   price: number;
@@ -48,8 +48,16 @@ const AddToCart = ({
     setCurrentQuantity((prev: number) => (prev > 1 ? prev - 1 : 1));
   };
 
+  // Handle Add to Cart
   const handleAddToCart = () => {
     setLoading(true); // Start loading
+
+    // Check if cartDetails is available
+    if (!cartDetails) {
+      console.log("Cart not initialized yet.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const product = {
@@ -57,7 +65,7 @@ const AddToCart = ({
         id,
         quantity: currentQuantity,
         description,
-        price: price,
+        price: price , // Default to originalPrice if price is not available
         currency,
         image: imageUrl,
         sku: price_id,
@@ -74,7 +82,7 @@ const AddToCart = ({
         console.log("New Product Added to Cart:", product);
       }
 
-      const newPrice = price * currentQuantity;
+      const newPrice = price * currentQuantity; // Use price or originalPrice
 
       // Show success message with toast
       toast.success(`${name} added to cart! Total Price: $${newPrice.toFixed(2)}`);
@@ -90,8 +98,11 @@ const AddToCart = ({
     }
   };
 
+  // To watch for cart changes and update the toast accordingly
   useEffect(() => {
-    console.log("Cart Details Updated:", cartDetails);
+    if (cartDetails) {
+      console.log("Cart Details Updated:", cartDetails);
+    }
   }, [cartDetails]);
 
   return (
@@ -122,6 +133,7 @@ const AddToCart = ({
           </Button>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
