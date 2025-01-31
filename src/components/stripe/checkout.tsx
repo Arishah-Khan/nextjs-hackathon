@@ -10,7 +10,7 @@ const CheckoutPage = ({ amount }: { amount: number }) => {
   console.log(window.location.host);
 
   const myhost = window.location.host;
-  let URL = myhost === "localhost:3000" ? "http://localhost:3000" : "https://stripe-payment-one-nu.vercel.app";
+  let URL = myhost === "localhost:3000" ? "http://localhost:3000" : "https://nextjs-hackathon-mu.vercel.app/";
 
   const stripe = useStripe();
   const elements = useElements();

@@ -1,11 +1,11 @@
-
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const PaymentSuccess = () => {
   const searchParams = useSearchParams();
-  const amount = searchParams.get('amount');  
+  const amount = searchParams.get('amount');
 
   return (
     <div className="flex flex-col justify-center items-center w-full py-16 px-4 bg-green-100">
@@ -13,8 +13,8 @@ const PaymentSuccess = () => {
         Thank you for your order!
       </h1>
       <p className="text-xl sm:text-2xl text-gray-700 mb-6">
-{`        We're excited to serve you! Your total order amount is
-`}        <span className="text-xl sm:text-2xl font-semibold text-orange-500">
+        We're excited to serve you! Your total order amount is
+        <span className="text-xl sm:text-2xl font-semibold text-orange-500">
           ${amount}
         </span>
       </p>
@@ -30,4 +30,11 @@ const PaymentSuccess = () => {
   );
 };
 
-export default PaymentSuccess;
+// Wrap the component with Suspense
+export default function Page() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PaymentSuccess />
+    </Suspense>
+  );
+}
