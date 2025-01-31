@@ -1,13 +1,15 @@
-"use client"
+"use client";
 import { useState } from "react";
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { auth } from "../../firebaseConfig"; // Firebase config import
-
 import { useRouter } from "next/navigation";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebaseConfig"; // Import Firestore config
 import Link from "next/link";
 import uploadImageToCloudinary from "@/lib/cloudinaryUtils";
+import { toast, ToastContainer } from "react-toastify"; // Corrected import
+import "react-toastify/dist/ReactToastify.css"; // Import the toast CSS
+import { BeatLoader } from "react-spinners"; // Import loader
 
 const SignUpPage = () => {
   const [email, setEmail] = useState("");
@@ -15,6 +17,7 @@ const SignUpPage = () => {
   const [fullName, setFullName] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Loader state
   const router = useRouter();
 
   // Handle sign-up form submission
@@ -31,6 +34,8 @@ const SignUpPage = () => {
       return;
     }
 
+    setLoading(true); // Show the loader
+
     try {
       // Handle image upload if present
       let imageUrl = "";
@@ -44,7 +49,7 @@ const SignUpPage = () => {
 
       // Send email verification
       await sendEmailVerification(user);
-      setError("Please check your email to verify your account");
+      toast.success("Please check your email to verify your account");
 
       // Save user data to Firestore
       await setDoc(doc(db, "users", user.uid), {
@@ -58,9 +63,13 @@ const SignUpPage = () => {
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
+        toast.error(error.message); // Show error message via toast
       } else {
         setError("An unknown error occurred");
+        toast.error("An unknown error occurred");
       }
+    } finally {
+      setLoading(false); // Hide the loader after completion
     }
   };
 
@@ -130,8 +139,9 @@ const SignUpPage = () => {
           <button
             type="submit"
             className="w-full bg-orange-500 text-white py-3 rounded-md font-semibold hover:bg-orange-600 focus:outline-none"
+            disabled={loading} // Disable button when loading
           >
-            Sign Up
+            {loading ? <BeatLoader color="white" size={10} /> : "Sign Up"} {/* Show loader or text */}
           </button>
 
           <div className="mt-4 text-center">
@@ -148,6 +158,9 @@ const SignUpPage = () => {
           </div>
         </form>
       </div>
+
+      {/* Corrected ToastContainer */}
+      <ToastContainer />
     </div>
   );
 };

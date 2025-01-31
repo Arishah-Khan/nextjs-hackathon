@@ -6,7 +6,7 @@ import { Inter } from "next/font/google";
 import { BiShoppingBag } from "react-icons/bi";
 import { FiSearch } from "react-icons/fi";
 import { IoMenu } from "react-icons/io5";
-import { FaUser } from "react-icons/fa"; // Importing the user icon
+import { FaRegHeart, FaUser } from "react-icons/fa"; // Importing the user icon
 import {
   Sheet,
   SheetContent,
@@ -21,6 +21,7 @@ import { auth, db } from "../../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import Image from "next/image";
 import { SiGnuprivacyguard } from "react-icons/si";
+import { useWishlist } from "@/contexts/wishListContext";
 
 // Apply the Inter font to the list items
 const inter = Inter({ subsets: ["latin"] });
@@ -78,6 +79,8 @@ const Header = () => {
   ];
 
   const router = useRouter();
+
+  const { wishlistCount } = useWishlist();
 
   const handleCartClick = () => {
     router.push("/shop/shopping-cart");
@@ -187,6 +190,18 @@ const Header = () => {
               </span>
             )}
           </button>
+          <div className="relative">
+            <Link href="/shop/wishlist">
+              <button className="relative  text-white hover:text-gray-300">
+                <FaRegHeart size="24" />
+                {wishlistCount > 0 && (
+                  <span className="absolute top-[-5px] right-[-5px] text-xs text-white bg-[#FF9F0D] rounded-full w-4 h-4 flex justify-center items-center">
+                    {wishlistCount}
+                  </span>
+                )}
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -296,6 +311,18 @@ const Header = () => {
                   </span>
                 )}
               </button>
+              <div className="relative">
+                <Link href="/shop/wishlist">
+                  <button className="relative text-white hover:text-gray-300">
+                    <FaRegHeart size="22" />
+                    {wishlistCount > 0 && (
+                      <span className="absolute top-[-5px] right-[-5px] text-xs text-white bg-[#FF9F0D] rounded-full w-4 h-4 flex justify-center items-center">
+                        {wishlistCount}
+                      </span>
+                    )}
+                  </button>
+                </Link>
+              </div>
             </div>
           </SheetContent>
         </Sheet>

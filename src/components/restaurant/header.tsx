@@ -6,7 +6,7 @@ import { doc, getDoc } from "firebase/firestore";
 import Link from "next/link";
 import { BiShoppingBag } from "react-icons/bi";
 import { FiSearch } from "react-icons/fi";
-import { IoMenu } from "react-icons/io5";
+import { IoHeartOutline, IoMenu } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
 import { SiGnuprivacyguard } from "react-icons/si";
 import { usePathname } from "next/navigation";
@@ -21,13 +21,16 @@ import {
 import { Inter } from "next/font/google";
 import Image from "next/image";
 import { useShoppingCart } from "use-shopping-cart";
-
+import { useWishlist } from "@/contexts/wishListContext";
+import { FaRegHeart } from "react-icons/fa6"
 // Apply the Inter font to the list items
 const inter = Inter({ subsets: ["latin"] });
 
 const Header = () => {
   const pathname = usePathname();
   const router = useRouter();
+
+  const { wishlistCount } = useWishlist();
 
   const { cartCount = 0 } = useShoppingCart();
 
@@ -66,12 +69,16 @@ const Header = () => {
     auth.signOut().then(() => {
       setUser(null);
       setShowLogoutOption(false);
-      router.push("/"); 
+      router.push("/");
     });
   };
 
   const handleCartClick = () => {
     router.push("/shop/shopping-cart");
+  };
+
+  const handleWisList = () => {
+    router.push("/shop/wishlist");
   };
   return (
     <header className="shadow-md max-w-[1240px] mx-auto">
@@ -146,6 +153,19 @@ const Header = () => {
               </span>
             )}
           </button>
+
+          <div className="relative">
+            <Link href="/shop/wishlist">
+              <button className="relative  text-white hover:text-gray-300">
+                <FaRegHeart size="24" />
+                {wishlistCount > 0 && (
+                  <span className="absolute top-[-5px] right-[-5px] text-xs text-white bg-[#FF9F0D] rounded-full w-4 h-4 flex justify-center items-center">
+                    {wishlistCount}
+                  </span>
+                )}
+              </button>
+            </Link>
+          </div>
 
           <button
             className="text-white hover:text-gray-300 flex justify-center items-center"
@@ -231,62 +251,75 @@ const Header = () => {
               )}
             </ul>
 
-             <div className="flex items-center justify-center  pt-4 space-x-6 ml-auto">
-                          {" "}
-                          {/* ml-auto to push icons to the right */}
-                          {/* Search Icon */}
-                          <button className="text-white hover:text-gray-300">
-                            <FiSearch size="20" />
-                          </button>
-                          {/* User Icon */}
-                          <button
-                            className="text-white hover:text-gray-300 flex justify-center items-center"
-                            onClick={() => {
-                              if (user) {
-                                setShowLogoutOption(!showLogoutOption);
-                              } else {
-                                handleSignInClick();
-                              }
-                            }}
-                          >
-                            {user ? (
-                              showLogoutOption ? (
-                                <div
-                                  className="absolute bg-white text-black rounded shadow-md p-2"
-                                  onClick={handleLogoutClick}
-                                >
-                                  Logout
-                                </div>
-                              ) : userImage ? (
-                                <Image
-                                  src={userImage}
-                                  alt="User"
-                                  width="20"
-                                  height="20"
-                                  className="w-6 h-6 border-[1.5px] border-white rounded-full object-contain"
-                                />
-                              ) : (
-                                <FaUser size="22" />
-                              )
-                            ) : (
-                              <SiGnuprivacyguard size="22" />
-                            )}
-                          </button>
-                          {/* Shopping Bag Icon */}
-                          <button
-                            className="relative text-white hover:text-gray-300"
-                            onClick={handleCartClick}
-                          >
-                            <BiShoppingBag size="24" />
-            
-                            {cartCount > 0 && (
-                              <span className="absolute top-[-5px] right-[-5px] text-xs text-white bg-[#FF9F0D] rounded-full w-4 h-4 flex justify-center items-center">
-                                {cartCount}
-                              </span>
-                            )}
-                          </button>
-                        </div>
-                        
+            <div className="flex items-center justify-center  pt-4 space-x-6 ml-auto">
+              {" "}
+              {/* ml-auto to push icons to the right */}
+              {/* Search Icon */}
+              <button className="text-white hover:text-gray-300">
+                <FiSearch size="20" />
+              </button>
+              {/* User Icon */}
+              <button
+                className="text-white hover:text-gray-300 flex justify-center items-center"
+                onClick={() => {
+                  if (user) {
+                    setShowLogoutOption(!showLogoutOption);
+                  } else {
+                    handleSignInClick();
+                  }
+                }}
+              >
+                {user ? (
+                  showLogoutOption ? (
+                    <div
+                      className="absolute bg-white text-black rounded shadow-md p-2"
+                      onClick={handleLogoutClick}
+                    >
+                      Logout
+                    </div>
+                  ) : userImage ? (
+                    <Image
+                      src={userImage}
+                      alt="User"
+                      width="20"
+                      height="20"
+                      className="w-6 h-6 border-[1.5px] border-white rounded-full object-contain"
+                    />
+                  ) : (
+                    <FaUser size="22" />
+                  )
+                ) : (
+                  <SiGnuprivacyguard size="22" />
+                )}
+              </button>
+              {/* Shopping Bag Icon */}
+              <button
+                className="relative text-white hover:text-gray-300"
+                onClick={handleCartClick}
+              >
+                <BiShoppingBag size="24" />
+
+                {cartCount > 0 && (
+                  <span className="absolute top-[-5px] right-[-5px] text-xs text-white bg-[#FF9F0D] rounded-full w-4 h-4 flex justify-center items-center">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
+
+              <div className="relative">
+            <Link href="/shop/wishlist">
+              <button className="relative text-white hover:text-gray-300">
+                <FaRegHeart size="22" />
+                {wishlistCount > 0 && (
+                  <span className="absolute top-[-5px] right-[-5px] text-xs text-white bg-[#FF9F0D] rounded-full w-4 h-4 flex justify-center items-center">
+                    {wishlistCount}
+                  </span>
+                )}
+              </button>
+            </Link>
+          </div>
+
+            </div>
           </SheetContent>
         </Sheet>
       </div>

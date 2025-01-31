@@ -1,22 +1,25 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // Import useRouter for navigation
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import Link from 'next/link';
-import { auth } from '../../firebaseConfig';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation"; // Import useRouter for navigation
+import { signInWithEmailAndPassword } from "firebase/auth";
+import Link from "next/link";
+import { auth } from "../../firebaseConfig";
+import { toast, ToastContainer } from "react-toastify"; // Import toast
+import "react-toastify/dist/ReactToastify.css"; // Import toast CSS for styling
+import { Circles } from "react-loader-spinner"; // Import spinner component for loading state
 
 const SignInPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [firebaseReady, setFirebaseReady] = useState(false); // State to check if we're on the client-side
   const router = useRouter(); // Initialize useRouter
 
   // Run Firebase-related code only in the client-side (in useEffect)
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       setFirebaseReady(true); // Client-side, so we can initialize Firebase
     }
   }, []);
@@ -24,7 +27,7 @@ const SignInPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(''); // Reset error state
+    setError(""); // Reset error state
 
     if (!firebaseReady) {
       return; // Firebase hasn't been initialized yet
@@ -32,11 +35,19 @@ const SignInPage = () => {
 
     try {
       await signInWithEmailAndPassword(auth, email, password); // Sign in user
+      // Show success toast
+      toast.success("Signed in successfully!", {
+        autoClose: 3000,
+      });
       // Redirect to home page upon successful sign-in
-      router.push('/'); // Redirect to home page
+      router.push("/"); // Redirect to home page
     } catch (err: any) {
       setError(err.message); // Set error message
       setLoading(false); // Stop loading
+      // Show error toast
+      toast.error("Invalid credentials. Please try again.", {
+        autoClose: 3000,
+      });
     }
   };
 
@@ -48,7 +59,9 @@ const SignInPage = () => {
         <form onSubmit={handleSubmit}>
           {/* Email Input */}
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email Address</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email Address
+            </label>
             <input
               type="email"
               id="email"
@@ -61,7 +74,9 @@ const SignInPage = () => {
 
           {/* Password Input */}
           <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
             <input
               type="password"
               id="password"
@@ -78,7 +93,13 @@ const SignInPage = () => {
             className="w-full bg-orange-500 text-white py-3 rounded-md font-semibold hover:bg-orange-600 focus:outline-none"
             disabled={loading || !firebaseReady}
           >
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? (
+              <div className="flex justify-center items-center">
+                <Circles height="24" width="24" color="#fff" />
+              </div>
+            ) : (
+              "Sign In"
+            )}
           </button>
 
           {/* Error Message */}
@@ -100,6 +121,9 @@ const SignInPage = () => {
           </div>
         </form>
       </div>
+
+      {/* Toast Notifications Container */}
+      <ToastContainer position="bottom-left" />
     </div>
   );
 };

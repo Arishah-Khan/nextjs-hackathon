@@ -29,8 +29,9 @@ import { client } from "@/sanity/lib/client";
 import AddToCart from "@/components/addToCart";
 import Card from "@/components/restaurant/cards";
 import WishlistButton from "@/components/addToWishList";
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AddToWishlist from "@/components/addToWishList";
 
 
 interface Card {
@@ -233,7 +234,14 @@ async function Page({ params }: { params: Promise<{ slug: string }> }) {
                 </span>
               </div> */}
 
-              <WishlistButton />
+ {/* Now passing data to AddToWishlist */}
+ <AddToWishlist
+        id={product._id}
+        name={product.name}
+        description={product.description}
+        image={product.image}
+        price={product.price}
+      />
 
               {/* Category */}
               <div className="text-[#4F4F4F] text-base">

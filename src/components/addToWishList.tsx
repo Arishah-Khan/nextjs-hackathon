@@ -1,30 +1,63 @@
-"use client"
+"use client";
 
 import { useState } from "react";
-import { FaRegHeart } from "react-icons/fa"; // For the Wishlist icon
+import { useWishlist } from "@/contexts/wishListContext"; // Import your context
+import { toast } from "react-toastify"; // For notifications
+import "react-toastify/dist/ReactToastify.css";
+import { ClipLoader } from "react-spinners"; // For loading spinner
 
-const WishlistButton = () => {
-  const [wishlistCount, setWishlistCount] = useState(0); // Track the number of items in the wishlist
+const AddToWishlist = ({
+  id,
+  name,
+  description,
+  image,
+  price,
+}: {
+  id: string;
+  name: string;
+  description: string;
+  image: string;
+  price: number;
+}) => {
+  const { addToWishlist } = useWishlist(); // Destructure addToWishlist function
+  const [loading, setLoading] = useState(false); // Loading state
 
-  // Function to add an item to the wishlist
-  const handleAddToWishlist = () => {
-    setWishlistCount((prevCount) => prevCount + 1); // Increment wishlist count
+  const handleAddToWishlist = async () => {
+    setLoading(true); // Set loading to true while adding to wishlist
+
+    try {
+      // Add to wishlist functionality
+      addToWishlist({
+        id,
+        name,
+        description,
+        price,
+        quantity: 1, // Default quantity for items in wishlist
+        imageUrl: image, // Image URL
+        inStock: true, // Assuming the item is in stock
+        stock: 10, // Adjust stock as needed
+      });
+
+      // Show success notification using toast
+      toast.success(`${name} added to your wishlist!`);
+
+    } catch (error) {
+      // Handle error
+      toast.error("Failed to add item to wishlist.");
+    } finally {
+      setLoading(false); // Stop loading after operation
+    }
   };
 
   return (
-    <div className="flex items-center gap-2 mt-4">
-      <button onClick={handleAddToWishlist} className="flex items-center gap-2">
-        <FaRegHeart className="text-lg text-[#4F4F4F]" /> {/* Wishlist Icon */}
-        <span className="text-[#4F4F4F] text-base">Add to Wishlist</span>
-      </button>
-      {/* Display Wishlist Count */}
-      {wishlistCount > 0 && (
-        <span className="absolute top-0 right-0 text-xs text-white bg-[#FF9F0D] rounded-full w-4 h-4 flex justify-center items-center">
-          {wishlistCount}
-        </span>
-      )}
-    </div>
+    <button
+      onClick={handleAddToWishlist}
+      className="btn btn-primary w-full flex items-center justify-center"
+      disabled={loading} // Disable the button while loading
+    >
+      {loading ? <ClipLoader color="#fff" size={20} /> : "Add to Wishlist"}
+    </button>
   );
 };
 
-export default WishlistButton;
+export default AddToWishlist;

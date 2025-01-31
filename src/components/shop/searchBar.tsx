@@ -1,5 +1,7 @@
-// components/SearchBar.tsx
 import { FiSearch } from "react-icons/fi";
+import { useState, useEffect } from "react";
+import { toast } from "react-toastify"; // For toast notifications
+import { ClipLoader } from "react-spinners"; // For spinner loader
 
 interface SearchBarProps {
   search: string;
@@ -7,20 +9,45 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({ search, onSearchChange }: SearchBarProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSearchChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    onSearchChange(value); // Update the parent state
+    setError(null); // Clear previous errors
+    setIsLoading(true); // Show the spinner
+
+    try {
+      await new Promise((resolve, reject) => setTimeout(resolve, 1000));
+
+      // Example of error handling
+      if (value === "error") {
+        throw new Error("Search query is invalid");
+      }
+    } catch (err: any) {
+      setError(err.message);
+      toast.error(err.message); // Show error toast
+    } finally {
+      setIsLoading(false); // Hide the spinner
+    }
+  };
+
   return (
-    <div className="mb-6">
-      <div className="relative">
-        <input
-          type="text"
-          placeholder="Search Product By Name"
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full p-3 pr-12 border border-[#E0E0E0] placeholder-[#E0E0E0] text-black focus:border-gray-300 focus:ring-gray-300 focus:ring-1 focus:outline-none"
-        />
-        <div className="bg-[#FF9F0D] absolute right-0 top-1/2 transform -translate-y-1/2 flex items-center justify-center w-12 h-12">
-          <FiSearch className="text-white text-xl" />
+    <div className="relative">
+      <input
+        type="text"
+        placeholder="Search for foods..."
+        value={search}
+        onChange={handleSearchChange}
+        className="border p-2 rounded-full w-full"
+      />
+      {isLoading && (
+        <div className="absolute right-2 top-2">
+          <ClipLoader size={20} color="#3498db" />
         </div>
-      </div>
+      )}
+      <FiSearch className="absolute right-2 top-2 text-xl text-gray-500" />
     </div>
   );
 };

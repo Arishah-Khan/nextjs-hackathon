@@ -1,8 +1,24 @@
-// src/app/contact/page.tsx
+"use client";
+
+import { useState } from 'react';
 import Link from 'next/link';
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa'; // Importing social media icons from react-icons
+import { TailSpin } from 'react-loader-spinner'; // Importing the loader spinner
 
 const ContactPage = () => {
+  const [loading, setLoading] = useState(false); // Add a loading state
+
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true); // Start loading when the form is submitted
+
+    // Simulate form submission delay (you can replace it with actual API call)
+    setTimeout(() => {
+      setLoading(false); // Stop loading after some time (or when your request finishes)
+      alert('Message Sent Successfully!');
+    }, 2000);
+  };
+
   return (
     <div className="px-4 sm:px-6 lg:px-20 py-10 max-w-screen-xl mx-auto">
       {/* Hero Section */}
@@ -11,14 +27,14 @@ const ContactPage = () => {
           Contact Us
         </h1>
         <p className="text-lg text-gray-600 mb-8">
-        {`  If you have any questions about our services or products, feel free to reach out. We're always here to help.`}
-        </p>
+{`          If you have any questions about our services or products, feel free to reach out. We're always here to help.
+`}        </p>
       </section>
 
       {/* Contact Form */}
       <section className="mb-16">
         <h2 className="text-2xl font-bold text-[#ff9f0d] mb-4 text-center">Contact Form</h2>
-        <form className="space-y-6  max-w-[700px] mx-auto">
+        <form onSubmit={handleFormSubmit} className="space-y-6 max-w-[700px] mx-auto">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-black">Name</label>
             <input
@@ -53,7 +69,11 @@ const ContactPage = () => {
             type="submit"
             className="mt-4 bg-[#ff9f0d] text-white px-6 py-3 rounded-lg font-semibold hover:bg-orange-400 transition"
           >
-            Send Message
+            {loading ? (
+              <TailSpin color="#fff" height={24} width={24} /> // Show the spinner while loading
+            ) : (
+              'Send Message'
+            )}
           </button>
         </form>
       </section>

@@ -17,12 +17,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 
-
 const formSchema = z.object({
-  firstName: z
-    .string()
-    .min(1, "First name is required.")
-    .max(50, "Max length is 50 characters."),
+  firstName: z.string().min(1, "First name is required.").max(50),
   companyName: z.string().optional(),
   streetAddress: z.string().min(1, "Street Address is required."),
   townCity: z.string().min(1, "Town/City is required."),
@@ -30,47 +26,34 @@ const formSchema = z.object({
   emailAddress: z.string().email("Invalid email address."),
   state: z.string().min(1, "State is required."),
   postalCode: z.string().min(1, "Postal code is required."),
-  paymentMethod: z.string().min(1, "Payment method is required."),
 });
 
 type FormType = z.infer<typeof formSchema>;
 
 const ContactForm = () => {
-  const [validationMessage, setValidationMessage] = useState<string>("");
-
+  const [isLoading, setIsLoading] = useState(false); // State for loader
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
   });
 
-
+  const router = useRouter();
 
   const onSubmit = async (data: FormType) => {
+    setIsLoading(true); // Start loader
+
     try {
       console.log("Form submitted:", data);
-  
-      setValidationMessage("");
-  
-      await Swal.fire({
-        icon: 'success',
-        title: 'Order Placed Successfully',
-        text: 'Your order has been placed successfully!',
-        confirmButtonText: 'OK',
-      });
-  
-      router.push("/confirm"); 
-  
+
+      setTimeout(() => {
+        router.push("/confirm"); // Redirect after 2 seconds
+      }, 2000);
     } catch (error) {
-      console.error("Error occurred during form submission:", error);
-      setValidationMessage("An error occurred. Please try again later.");
+      console.error("Error during form submission:", error);
     }
   };
-  
-
-  const router = useRouter();
 
   return (
     <div className="flex">
-      {/* Left Side Form */}
       <div className="w-full">
         <h2 className="text-2xl font-semibold mb-4">Shipping Address</h2>
 
@@ -89,124 +72,19 @@ const ContactForm = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="companyName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Company Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Company Name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="streetAddress"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Street Address*</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Street Address" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Other form fields go here */}
 
-            <FormField
-              control={form.control}
-              name="townCity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Town/City*</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Town/City" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phoneNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number*</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Phone Number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="emailAddress"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address*</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Email Address" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="state"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>State*</FormLabel>
-                  <FormControl>
-                    <Input placeholder="State" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="postalCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Postal Code*</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Postal Code" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {/* Payment Method Selection */}
-            <FormField
-              control={form.control}
-              name="paymentMethod"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Payment Method*</FormLabel>
-                  <FormControl>
-                    <select {...field} className="input">
-                      <option value="">Select Payment Method</option>
-                      <option value="creditCard">Credit Card</option>
-                      <option value="paypal">PayPal</option>
-                      <option value="bankTransfer">Bank Transfer</option>
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            {validationMessage && <p>{validationMessage}</p>}
-            <Button
-              type="submit"
-              className="mt-6 w-full bg-[#ff9f0d] text-white py-2 rounded"
-            >
-              Place Order
-            </Button>
+            {/* Loader & Button */}
+            {isLoading ? (
+              <p className="text-center text-gray-600">Redirecting to payment...</p>
+            ) : (
+              <Button
+                type="submit"
+                className="mt-6 w-full bg-[#ff9f0d] text-white py-2 rounded"
+              >
+                Proceed To Payment
+              </Button>
+            )}
           </form>
         </Form>
       </div>

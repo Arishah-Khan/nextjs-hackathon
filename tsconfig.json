@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, ".next/types/app/(group)/payment-success/page.tsx", ".next/types/app/(group)/payment-success/page.tsx"  ],
   "exclude": [
     "node_modules"
   ]

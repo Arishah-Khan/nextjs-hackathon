@@ -1,6 +1,7 @@
+// components/Shop.tsx
 "use client";
 
-import { useEffect, useState ,  useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import HeroSection from "@/components/menu/heroSec";
 import Link from "next/link";
 import Image from "next/image";
@@ -12,7 +13,8 @@ import Pagination from "@/components/shop/pagination";
 import PriceRange from "@/components/shop/range";
 import LatestProducts from "@/components/shop/latestProduct";
 import ProductTags from "@/components/shop/productTags";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners"; // Importing spinner for loading state
 
 interface Food {
   _id: string;
@@ -34,18 +36,22 @@ export default function Shop() {
   const [search, setSearch] = useState("");
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(800);
-  const [error, setError] = useState<string | null>(null); 
-  const errorShown = useRef(false)
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false); // Manage loading state
+  const errorShown = useRef(false);
 
   useEffect(() => {
-    fetchFoods();
+    fetchFoods(); // Fetch data on initial load
   }, []);
 
   useEffect(() => {
+    // Filtering logic based on selected category, search, and price range
     const filteredByCategoryAndSearch = allFoods.filter((food) => {
       const matchesCategory =
         selectedCategory === "All" || food.category === selectedCategory;
-      const matchesSearch = food.name.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch = food.name
+        .toLowerCase()
+        .includes(search.toLowerCase());
       return matchesCategory && matchesSearch;
     });
 
@@ -54,33 +60,34 @@ export default function Shop() {
     );
 
     setFilteredFoods(priceFiltered);
-    setCurrentPage(1); 
+    setCurrentPage(1); // Reset page to 1 when filter changes
   }, [selectedCategory, search, minPrice, maxPrice, allFoods]);
 
   const fetchFoods = async () => {
+    setIsLoading(true); // Set loading state to true before fetching data
     try {
       const query = `*[_type == "food"]{_id, name, category, price, originalPrice, image, slug}`;
       const foods = await client.fetch(query);
 
       if (!foods.length) {
-        throw new Error("No data found or query is incorrect");
+        throw new Error("No food items found.");
       }
 
-      setAllFoods(foods);
+      setAllFoods(foods); // Set fetched foods data
     } catch (error: any) {
-      console.error("Error caught:", error); 
+      console.error("Error caught:", error);
       setError(error.message || "Something went wrong");
+    } finally {
+      setIsLoading(false); // Set loading state to false after fetching is done
     }
   };
 
   useEffect(() => {
     if (error && !errorShown.current) {
-      toast.error(`Error: ${error}`); 
-      errorShown.current = true; 
+      toast.error(`Error: ${error}`); // Show toast for errors
+      errorShown.current = true;
     }
-  }, [error]); 
-
-
+  }, [error]);
 
   const totalPages = Math.ceil(filteredFoods.length / itemsPerPage);
 
@@ -103,40 +110,56 @@ export default function Shop() {
 
       <div className="flex flex-wrap lg:flex-nowrap gap-8 px-1 py-2 md:py-10 md:px-5">
         <section className="order-2 md:order-1 flex-1 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentFoods.map((food) => (
-            <Link href={`/shop/card/${food.slug}`} key={food.slug}>
-              <div className="p-4 bg-white rounded-lg shadow hover:shadow-lg">
-                <Image
-                  src={
-                    food.image?.asset?._ref
-                      ? urlFor(food.image).url()
-                      : "/path/to/default-image.jpg"
-                  }
-                  alt={food.name}
-                  width={300}
-                  height={200}
-                  className="rounded-lg object-cover w-full h-[200px]"
-                />
-                <h3 className="mt-4 text-lg font-bold text-gray-800">{food.name}</h3>
-                <div className="flex items-center gap-2 mt-2">
-                  {food.price ? (
-                    <>
+          {isLoading && (
+            <div className="flex justify-center items-center h-full w-full">
+              <ClipLoader size={50} color="#FF9F0D" loading={isLoading} />
+            </div>
+          )}
+
+          {!isLoading && filteredFoods.length === 0 && (
+            <div className="text-center text-lg font-semibold text-gray-500">
+  No food items found matching your criteria.
+  </div>
+          )}
+
+          {!isLoading &&
+            filteredFoods.length > 0 &&
+            currentFoods.map((food) => (
+              <Link href={`/shop/card/${food.slug}`} key={food.slug}>
+                <div className="p-4 bg-white rounded-lg shadow hover:shadow-lg">
+                  <Image
+                    src={
+                      food.image?.asset?._ref
+                        ? urlFor(food.image).url()
+                        : "/path/to/default-image.jpg"
+                    }
+                    alt={food.name}
+                    width={300}
+                    height={200}
+                    className="rounded-lg object-cover w-full h-[200px]"
+                  />
+                  <h3 className="mt-4 text-lg font-bold text-gray-800">
+                    {food.name}
+                  </h3>
+                  <div className="flex items-center gap-2 mt-2">
+                    {food.price ? (
+                      <>
+                        <p className="text-[#FF9F0D] text-lg font-semibold">
+                          ${food.price}
+                        </p>
+                        <p className="line-through text-gray-500">
+                          ${food.originalPrice}
+                        </p>
+                      </>
+                    ) : (
                       <p className="text-[#FF9F0D] text-lg font-semibold">
-                        ${food.price}
-                      </p>
-                      <p className="line-through text-gray-500">
                         ${food.originalPrice}
                       </p>
-                    </>
-                  ) : (
-                    <p className="text-[#FF9F0D] text-lg font-semibold">
-                      ${food.originalPrice}
-                    </p>
-                  )}
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
         </section>
 
         <aside className="order-1 md:order-2 w-full lg:w-[300px] bg-white p-5 rounded-lg mt-10 lg:mt-0">
@@ -146,26 +169,7 @@ export default function Shop() {
             onCategoryChange={setSelectedCategory}
           />
 
-          <div
-            style={{
-              backgroundImage: 'url("/images/bg.png")',
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              padding: "20px",
-            }}
-            className="h-[280px] my-3 hidden md:flex"
-          >
-            <div className="flex flex-col justify-between h-full">
-              <div>
-                <h3 className="text-white">Perfect Taste</h3>
-                <h2 className="font-bold text-white">Classic Restaurant</h2>
-                <h4 className="text-[#ff9f0d]">45.00$</h4>
-              </div>
-
-              <h5 className="text-white self-end">Shop Now</h5>
-            </div>
-          </div>
+          {/* Other filters */}
 
           <PriceRange
             onRangeChange={(min, max) => {
@@ -175,7 +179,6 @@ export default function Shop() {
           />
 
           <h2 className="text-lg font-bold mt-3">Latest Product</h2>
-
           <LatestProducts />
 
           <ProductTags />
