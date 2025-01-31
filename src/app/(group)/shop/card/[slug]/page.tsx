@@ -218,7 +218,7 @@ async function Page({ params }: { params: Promise<{ slug: string }> }) {
                 description={product.description}
                 image={product.image}
                 name={product.name}
-                price={product.price}
+                price={product.price || product.originalPrice}
                 originalPrice={product.originalPrice}
                 price_id={product.price_id}
               />
