@@ -11,8 +11,8 @@ const PaymentSuccess = ({ searchParams }: IParams) => {
         Thank you for your order!
       </h1>
       <p className="text-xl sm:text-2xl text-gray-700 mb-6">
-        We're excited to serve you! Your total order amount is{" "}
-        <span className="text-xl sm:text-2xl font-semibold text-orange-500">
+{`        We're excited to serve you! Your total order amount is
+`}        <span className="text-xl sm:text-2xl font-semibold text-orange-500">
           $ {searchParams.amount}
         </span>
       </p>
