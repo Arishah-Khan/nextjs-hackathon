@@ -162,14 +162,22 @@ async function Page({ params }: { params: Promise<{ slug: string }> }) {
               {product?.description}
             </p>
 
-            <p className="font-semibold text-xl text-gray-900 mb-3">
-              <span className="text-black" style={{ fontFamily: "Helvetica" }}>
-                ${product.price}{" "}
-              </span>{" "}
-              <span className="line-through text-gray-500">
-                ${product.originalPrice}{" "}
-              </span>
-            </p>
+            <div className="flex items-center gap-2 mt-2">
+                    {product.price ? (
+                      <>
+                        <p className="text-[#FF9F0D] text-lg font-semibold">
+                          ${product.price}
+                        </p>
+                        <p className="line-through text-gray-500">
+                          ${product.originalPrice}
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-[#FF9F0D] text-lg font-semibold">
+                        ${product.originalPrice}
+                      </p>
+                    )}
+                  </div>
             <div className="flex items-center mb-2">
               {/* Stars icons */}
               <div className="flex items-center mr-4">
