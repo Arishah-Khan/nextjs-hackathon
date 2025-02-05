@@ -32,6 +32,7 @@ import WishlistButton from "@/components/addToWishList";
 import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddToWishlist from "@/components/addToWishList";
+import Reviews from "@/components/reviews";
 
 
 interface Card {
@@ -63,6 +64,7 @@ interface Product {
 }
 
 async function Page({ params }: { params: Promise<{ slug: string }> }) {
+  
   try {
     const { slug } = await params;
     // console.log("Product ID:", id);
@@ -83,7 +85,6 @@ async function Page({ params }: { params: Promise<{ slug: string }> }) {
     }`;
 
     const products: Product[] = await client.fetch(query, { slug });
-    // console.log("Fetched Products:", products); // Debug: Check the fetched products
 
     if (!products || products.length === 0) {
       toast.error("Product not found.");
@@ -283,8 +284,12 @@ async function Page({ params }: { params: Promise<{ slug: string }> }) {
           </div>
         </div>
 
-        <div className="mt-6 px-6">
-          {/* Description Button and Details */}
+        <div className="mt-6 px-2 md:px-6">
+
+        <div>
+            {/* Review Section */}
+        <Reviews/>
+        </div>
           <button className="bg-[#FF9F0D] px-4 py-2 rounded mb-4">
             Description
           </button>

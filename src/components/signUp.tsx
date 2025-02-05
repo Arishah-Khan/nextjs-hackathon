@@ -1,26 +1,21 @@
 "use client";
 import { useState } from "react";
-import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
-import { auth } from "../../firebaseConfig"; // Firebase config import
+import { signIn } from "next-auth/react"; // Import signIn from NextAuth.js
 import { useRouter } from "next/navigation";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../../firebaseConfig"; // Import Firestore config
-import Link from "next/link";
-import uploadImageToCloudinary from "@/lib/cloudinaryUtils";
-import { toast, ToastContainer } from "react-toastify"; // Corrected import
-import "react-toastify/dist/ReactToastify.css"; // Import the toast CSS
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { BeatLoader } from "react-spinners"; // Import loader
+import Link from "next/link";
 
 const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
-  const [image, setImage] = useState<File | null>(null);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false); // Loader state
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  // Handle sign-up form submission
+  // Handle sign-up form submission (email/password)
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -34,42 +29,41 @@ const SignUpPage = () => {
       return;
     }
 
-    setLoading(true); // Show the loader
+    setLoading(true); // Show loader
 
     try {
-      // Handle image upload if present
-      let imageUrl = "";
-      if (image) {
-        imageUrl = await uploadImageToCloudinary(image);
-      }
-
-      // Create the user with Firebase Auth
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      // Send email verification
-      await sendEmailVerification(user);
-      toast.success("Please check your email to verify your account");
-
-      // Save user data to Firestore
-      await setDoc(doc(db, "users", user.uid), {
-        fullName,
+      // Sign up using NextAuth (email/password)
+      const res = await signIn("credentials", {
+        redirect: false,
         email,
-        profileImageUrl: imageUrl, // Save image URL in Firestore
+        password,
       });
 
-      // Redirect to login page
-      router.push("/login");
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-        toast.error(error.message); // Show error message via toast
+      if (res?.error) {
+        setError(res.error);
+        toast.error(res.error); // Show error via toast
       } else {
-        setError("An unknown error occurred");
-        toast.error("An unknown error occurred");
+        toast.success("Sign up successful! Please check your email for verification.");
+        router.push("/login"); // Redirect to login page after successful sign-up
       }
+    } catch (error) {
+      setError("An error occurred while signing up.");
+      toast.error("An error occurred while signing up.");
     } finally {
-      setLoading(false); // Hide the loader after completion
+      setLoading(false); // Hide loader
+    }
+  };
+
+  // Handle provider sign-in (Google)
+  const handleProviderSignIn = async (provider: string) => {
+    setLoading(true);
+    try {
+      const res = await signIn(provider, { redirect: true });
+    } catch (error) {
+      setError("An error occurred with provider sign-in.");
+      toast.error("An error occurred with provider sign-in.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -121,46 +115,38 @@ const SignUpPage = () => {
             />
           </div>
 
-          <div className="mb-4">
-            <label htmlFor="image" className="block text-sm font-medium text-gray-700">
-              Profile Image
-            </label>
-            <input
-              type="file"
-              id="image"
-              accept="image/*"
-              className="w-full p-3 border border-gray-300 rounded-md mt-1 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
-            />
-          </div>
-
           {error && <p className="text-red-500 text-sm text-center mb-4">{error}</p>}
 
           <button
             type="submit"
             className="w-full bg-orange-500 text-white py-3 rounded-md font-semibold hover:bg-orange-600 focus:outline-none"
-            disabled={loading} // Disable button when loading
+            disabled={loading}
           >
-            {loading ? <BeatLoader color="white" size={10} /> : "Sign Up"} {/* Show loader or text */}
+            {loading ? <BeatLoader color="white" size={10} /> : "Sign Up"}
           </button>
-
-          <div className="mt-4 text-center">
-            <Link href="/forgot-password" className="text-sm text-gray-500 hover:text-gray-700">
-              Forgot Password?
-            </Link>
-          </div>
-
-          <div className="mt-6 text-center text-sm text-gray-500">
-            Already have an account?{" "}
-            <Link href="/login" className="text-orange-500 hover:text-orange-600">
-              Login
-            </Link>
-          </div>
         </form>
-      </div>
 
-      {/* Corrected ToastContainer */}
-      <ToastContainer />
+        <div className="mt-4 text-center text-sm text-gray-500">
+          <p>Or sign up with</p>
+          <div className="mt-2">
+            <button
+              onClick={() => handleProviderSignIn("google")}
+              className="w-full bg-red-500 text-white py-3 rounded-md font-semibold hover:bg-red-600 focus:outline-none"
+            >
+              Sign Up with Google
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-6 text-center text-sm text-gray-500">
+          Already have an account?{" "}
+          <Link href="/login" className="text-orange-500 hover:text-orange-600">
+            Login
+          </Link>
+        </div>
+
+        <ToastContainer />
+      </div>
     </div>
   );
 };

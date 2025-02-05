@@ -35,7 +35,6 @@ export default function RootLayout({
         <CartProvider>
           <ToastProvider />
           
-          {/* Wrap with WishlistProvider */}
           <WishlistProvider>
           <PriceProvider>
 
