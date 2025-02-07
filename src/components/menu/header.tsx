@@ -57,18 +57,6 @@ const Header = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleSignInClick = () => {
-    router.push("/signUp");
-  };
-
-  const handleLogoutClick = () => {
-    auth.signOut().then(() => {
-      setUser(null);
-      setShowLogoutOption(false);
-      router.push("/"); // Redirect to homepage after logout
-    });
-  };
-
   const navItems = [
     { name: "Home", link: "/" },
     { name: "Menu", link: "/menu" },
@@ -145,8 +133,6 @@ const Header = () => {
             <FiSearch size="24" />
           </button>
           {/* User Icon */}
-          <LoginLogoutButton />
-
           {/* Shopping Bag Icon */}
           <button
             className="relative text-white hover:text-gray-300"
@@ -171,6 +157,10 @@ const Header = () => {
                 )}
               </button>
             </Link>
+          </div>
+          <div className="font-bold text-white">
+            
+            <LoginLogoutButton />
           </div>
         </div>
       </div>
@@ -236,7 +226,6 @@ const Header = () => {
               </button>
               {/* User Icon */}
               <LoginLogoutButton />
-
               {/* Shopping Bag Icon */}
               <button
                 className="relative text-white hover:text-gray-300"
