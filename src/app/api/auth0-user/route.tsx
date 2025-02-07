@@ -10,6 +10,8 @@ const client = createClient({
   token: process.env.SANITY_API_TOKEN!,
 });
 
+const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL!;
+
 export async function POST(req: Request) {
   try {
     const session = await getSession();
@@ -23,21 +25,30 @@ export async function POST(req: Request) {
     // **Check if user already exists in Sanity**
     const existingUser = await client.fetch(`*[_type == "user" && email == $email][0]`, { email });
 
-    if (existingUser) {
-      return NextResponse.json({ success: false, message: "User already exists" });
+    // **Admin Check**
+    let role = "Customer";
+    if (email === ADMIN_EMAIL) {
+      role = "Admin"; // ✅ Admin Role Set
     }
 
-    // Save new user in Sanity
+    if (existingUser) {
+      // ✅ **User already exists, update the user**
+      const updatedUser = await client.patch(existingUser._id).set({ name, role }).commit();
+      return NextResponse.json({ success: true, message: "User updated", user: updatedUser });
+    }
+
+    // ✅ **If user doesn't exist, create a new one**
     const newUser = await client.create({
       _type: "user",
       name,
       email,
-      role: "Customer",
+      role,
       createdAt: new Date().toISOString(),
     });
 
     return NextResponse.json({ success: true, user: newUser });
   } catch (error) {
+    console.error("Sanity User Save Error:", error);
     return NextResponse.json({ success: false, message: "Error saving user" }, { status: 500 });
   }
 }
