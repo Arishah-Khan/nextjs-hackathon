@@ -23,6 +23,7 @@ import Image from "next/image";
 import { useShoppingCart } from "use-shopping-cart";
 import { useWishlist } from "@/contexts/wishListContext";
 import { FaRegHeart } from "react-icons/fa6"
+import LoginLogoutButton from "../loginLogoutButton";
 // Apply the Inter font to the list items
 const inter = Inter({ subsets: ["latin"] });
 
@@ -167,39 +168,7 @@ const Header = () => {
             </Link>
           </div>
 
-          <button
-            className="text-white hover:text-gray-300 flex justify-center items-center"
-            onClick={() => {
-              if (user) {
-                setShowLogoutOption(!showLogoutOption);
-              } else {
-                handleSignInClick();
-              }
-            }}
-          >
-            {user ? (
-              showLogoutOption ? (
-                <div
-                  className="absolute bg-white text-black rounded shadow-md p-2"
-                  onClick={handleLogoutClick}
-                >
-                  Logout
-                </div>
-              ) : userImage ? (
-                <Image
-                  src={userImage}
-                  alt="User"
-                  width="20"
-                  height="20"
-                  className="w-6 h-6 border-[1.5px] border-white rounded-full object-contain"
-                />
-              ) : (
-                <FaUser size="22" />
-              )
-            ) : (
-              <SiGnuprivacyguard size="22" />
-            )}
-          </button>
+          <LoginLogoutButton />
         </div>
       </div>
 
@@ -259,39 +228,7 @@ const Header = () => {
                 <FiSearch size="20" />
               </button>
               {/* User Icon */}
-              <button
-                className="text-white hover:text-gray-300 flex justify-center items-center"
-                onClick={() => {
-                  if (user) {
-                    setShowLogoutOption(!showLogoutOption);
-                  } else {
-                    handleSignInClick();
-                  }
-                }}
-              >
-                {user ? (
-                  showLogoutOption ? (
-                    <div
-                      className="absolute bg-white text-black rounded shadow-md p-2"
-                      onClick={handleLogoutClick}
-                    >
-                      Logout
-                    </div>
-                  ) : userImage ? (
-                    <Image
-                      src={userImage}
-                      alt="User"
-                      width="20"
-                      height="20"
-                      className="w-6 h-6 border-[1.5px] border-white rounded-full object-contain"
-                    />
-                  ) : (
-                    <FaUser size="22" />
-                  )
-                ) : (
-                  <SiGnuprivacyguard size="22" />
-                )}
-              </button>
+              <LoginLogoutButton />
               {/* Shopping Bag Icon */}
               <button
                 className="relative text-white hover:text-gray-300"
