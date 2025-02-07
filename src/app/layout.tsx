@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en">
       <body className={`${inter.variable} ${playfair.variable}`}>
         <UserProvider>
-          <SaveUserToSanity /> {/* ✅ Yeh component sirf user ka data save karega */}
+          <SaveUserToSanity /> 
           <CartProvider>
             <ToastProvider />
             <WishlistProvider>

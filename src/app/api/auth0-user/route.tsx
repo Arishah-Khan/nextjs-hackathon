@@ -3,11 +3,11 @@ import { createClient } from "@sanity/client";
 import { getSession } from "@auth0/nextjs-auth0";
 
 const client = createClient({
-  projectId: "your_project_id",
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: "production",
   useCdn: false,
   apiVersion: "2024-02-01",
-  token: "your_sanity_token",
+  token: process.env.SANITY_API_TOKEN!,
 });
 
 export async function POST(req: Request) {
